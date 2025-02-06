@@ -1,0 +1,300 @@
+{
+    "version": "1.0.0",
+    "last_updated": "2025-02-06T04:22:00Z",
+    "ad_sdks": {
+        "facebook": {
+            "identifier": "com.facebook.ads",
+            "components": {
+                "activities": [
+                    "com.facebook.ads.AudienceNetworkActivity",
+                    "com.facebook.ads.InterstitialAdActivity",
+                    "com.facebook.ads.RewardedVideoAdActivity",
+                    "com.facebook.ads.internal.DisplayAdActivity"
+                ],
+                "services": [
+                    "com.facebook.ads.internal.DisplayAdService"
+                ],
+                "providers": [
+                    "com.facebook.ads.AudienceNetworkContentProvider"
+                ],
+                "receivers": [
+                    "com.facebook.ads.internal.DisplayAdReceiver"
+                ],
+                "permissions": [
+                    "com.facebook.ads.permission.*"
+                ]
+            },
+            "resources": {
+                "layouts": [
+                    "fb_native_ad_layout",
+                    "fb_banner_ad_layout"
+                ],
+                "drawables": [
+                    "fb_ad_choice_icon"
+                ],
+                "strings": [
+                    "fb_ad_attribution"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "FBAdSettings.initialize",
+                    "AudienceNetworkAds.initialize"
+                ],
+                "loading": [
+                    "loadAd()",
+                    "buildLoadAdConfig()"
+                ],
+                "callbacks": [
+                    "onAdLoaded",
+                    "onAdClicked",
+                    "onLoggingImpression"
+                ]
+            }
+        },
+        "admob": {
+            "identifier": "com.google.android.gms.ads",
+            "components": {
+                "activities": [
+                    "com.google.android.gms.ads.AdActivity",
+                    "com.google.android.gms.ads.OutOfContextTestingActivity",
+                    "com.google.android.gms.ads.internal.overlay.AdOverlayActivity"
+                ],
+                "services": [
+                    "com.google.android.gms.ads.AdService"
+                ],
+                "providers": [
+                    "com.google.android.gms.ads.MobileAdsInitProvider"
+                ],
+                "permissions": [
+                    "com.google.android.gms.permission.AD_ID"
+                ]
+            },
+            "resources": {
+                "layouts": [
+                    "gad_native_ad_view",
+                    "gad_banner"
+                ],
+                "strings": [
+                    "gad_attribution",
+                    "gad_ad_marker"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "MobileAds.initialize",
+                    "RequestConfiguration.Builder()"
+                ],
+                "loading": [
+                    "loadAd()",
+                    "loadBannerAd()",
+                    "loadInterstitialAd()"
+                ],
+                "callbacks": [
+                    "onAdLoaded",
+                    "onAdFailedToLoad",
+                    "onAdImpression"
+                ]
+            }
+        },
+        "unity": {
+            "identifier": "com.unity3d.ads",
+            "components": {
+                "activities": [
+                    "com.unity3d.services.ads.adunit.AdUnitActivity",
+                    "com.unity3d.services.ads.adunit.AdUnitTransparentActivity",
+                    "com.unity3d.services.ads.adunit.AdUnitTransparentSoftwareActivity",
+                    "com.unity3d.services.ads.adunit.AdUnitSoftwareActivity"
+                ],
+                "services": [
+                    "com.unity3d.services.ads.UnityAdsService"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "UnityAds.initialize",
+                    "IUnityAdsInitializationListener"
+                ],
+                "loading": [
+                    "UnityAds.show",
+                    "UnityAds.load"
+                ],
+                "callbacks": [
+                    "onUnityAdsReady",
+                    "onUnityAdsStart",
+                    "onUnityAdsFinish"
+                ]
+            }
+        },
+        "applovin": {
+            "identifier": "com.applovin",
+            "components": {
+                "activities": [
+                    "com.applovin.adview.AppLovinInterstitialActivity",
+                    "com.applovin.adview.AppLovinConfirmationActivity",
+                    "com.applovin.impl.adview.AppLovinVideoActivity"
+                ],
+                "services": [
+                    "com.applovin.impl.sdk.utils.AppKilledService"
+                ],
+                "providers": [
+                    "com.applovin.sdk.AppLovinInitProvider"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "AppLovinSdk.getInstance",
+                    "AppLovinSdk.initializeSdk"
+                ],
+                "loading": [
+                    "loadNextAd()",
+                    "showAd()",
+                    "loadVariableReward()"
+                ],
+                "callbacks": [
+                    "onAdDisplayed",
+                    "onAdHidden",
+                    "onAdClicked"
+                ]
+            }
+        },
+        "ironsource": {
+            "identifier": "com.ironsource.sdk",
+            "components": {
+                "activities": [
+                    "com.ironsource.sdk.controller.ControllerActivity",
+                    "com.ironsource.sdk.controller.InterstitialActivity",
+                    "com.ironsource.sdk.controller.OpenUrlActivity"
+                ],
+                "providers": [
+                    "com.ironsource.lifecycle.IronsourceLifecycleProvider"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "IronSource.init",
+                    "IronSource.setUserId"
+                ],
+                "loading": [
+                    "showRewardedVideo()",
+                    "loadInterstitial()",
+                    "showOfferwall()"
+                ],
+                "callbacks": [
+                    "onRewardedVideoAdOpened",
+                    "onInterstitialAdReady",
+                    "onOfferwallAvailable"
+                ]
+            }
+        },
+        "bytedance": {
+            "identifier": "com.bytedance.sdk.openadsdk",
+            "components": {
+                "activities": [
+                    "com.bytedance.sdk.openadsdk.activity.TTLandingPageActivity",
+                    "com.bytedance.sdk.openadsdk.activity.TTRewardVideoActivity",
+                    "com.bytedance.sdk.openadsdk.activity.TTFullScreenVideoActivity"
+                ],
+                "providers": [
+                    "com.bytedance.sdk.openadsdk.TTFileProvider",
+                    "com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "TTAdSdk.init",
+                    "TTAdManager.getInstance()"
+                ],
+                "loading": [
+                    "loadRewardVideoAd()",
+                    "loadSplashAd()",
+                    "loadBannerAd()"
+                ],
+                "callbacks": [
+                    "onRewardVideoAdLoad",
+                    "onSplashAdLoad",
+                    "onBannerAdLoad"
+                ]
+            }
+        },
+        "mopub": {
+            "identifier": "com.mopub",
+            "components": {
+                "activities": [
+                    "com.mopub.mobileads.MoPubActivity",
+                    "com.mopub.mobileads.MraidActivity",
+                    "com.mopub.common.MoPubBrowser",
+                    "com.mopub.mobileads.RewardedMraidActivity"
+                ],
+                "services": [
+                    "com.mopub.mobileads.MoPubService"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "MoPub.initializeSdk",
+                    "SdkConfiguration.Builder()"
+                ],
+                "loading": [
+                    "loadAd()",
+                    "loadBanner()",
+                    "loadInterstitial()"
+                ],
+                "callbacks": [
+                    "onBannerLoaded",
+                    "onInterstitialLoaded",
+                    "onRewardedVideoCompleted"
+                ]
+            }
+        },
+        "inmobi": {
+            "identifier": "com.inmobi.ads",
+            "components": {
+                "activities": [
+                    "com.inmobi.ads.rendering.InMobiAdActivity"
+                ],
+                "services": [
+                    "com.inmobi.signals.activityrecognition.ActivityRecognitionManager"
+                ]
+            },
+            "code_patterns": {
+                "initialization": [
+                    "InMobiSdk.init",
+                    "InMobiSdk.setLogLevel"
+                ],
+                "loading": [
+                    "load()",
+                    "show()",
+                    "loadAd()"
+                ],
+                "callbacks": [
+                    "onAdLoadSucceeded",
+                    "onAdLoadFailed",
+                    "onAdDisplayed"
+                ]
+            }
+        }
+    },
+    "learned_patterns": {
+        "activities": {
+            "pattern": ".*[Aa]d[s]?Activity$",
+            "confidence": 0.85,
+            "matches": []
+        },
+        "services": {
+            "pattern": ".*[Aa]d[s]?Service$",
+            "confidence": 0.80,
+            "matches": []
+        },
+        "providers": {
+            "pattern": ".*[Aa]d[s]?Provider$",
+            "confidence": 0.75,
+            "matches": []
+        }
+    },
+    "removal_statistics": {
+        "total_apks_processed": 0,
+        "successful_removals": 0,
+        "pattern_matches": {}
+    }
+}
