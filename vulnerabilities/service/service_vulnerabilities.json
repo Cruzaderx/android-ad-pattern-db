@@ -1,0 +1,497 @@
+{
+    "metadata": {
+        "category": "Service Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T11:19:00Z",
+        "description": "Service-related security vulnerabilities including binding issues, foreground service abuse, and service lifecycle manipulation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "SVC-001",
+            "name": "Service Binding Hijacking",
+            "description": "Application's service binding mechanism can be hijacked to intercept or manipulate service communication.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Service communication interception and manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Service",
+                "methods": [
+                    "onBind",
+                    "bindService",
+                    "onServiceConnected"
+                ],
+                "manifest": "AndroidManifest.xml"
+            },
+            "detection": {
+                "pattern": [
+                    "bindService\\([^)]+\\)",
+                    "<service[^>]+android:exported=\"true\"",
+                    "onServiceConnected\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Service binding",
+                    "Connection handling",
+                    "IPC communication"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service implementation",
+                        "Binding handling",
+                        "Connection validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateBinding",
+                        "checkConnection",
+                        "verifyService"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze binding",
+                        "Review connections",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Binding handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify service",
+                    "Create malicious client",
+                    "Intercept binding",
+                    "Manipulate communication",
+                    "Extract data"
+                ],
+                "requirements": [
+                    "Service access",
+                    "Binding knowledge",
+                    "IPC understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test binding",
+                        "Check interception",
+                        "Verify manipulation"
+                    ],
+                    "expected_results": [
+                        "Binding hijacked",
+                        "Communication intercepted",
+                        "Data manipulated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service component",
+                "Binding handler",
+                "Connection manager"
+            ],
+            "tags": [
+                "service",
+                "binding",
+                "hijacking",
+                "ipc"
+            ]
+        },
+        {
+            "id": "SVC-002",
+            "name": "Foreground Service Abuse",
+            "description": "Application's foreground service can be abused to maintain persistent access or execute privileged operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Persistent access and resource abuse",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Service",
+                "methods": [
+                    "startForeground",
+                    "stopForeground",
+                    "setForegroundServiceBehavior"
+                ],
+                "permissions": [
+                    "android.permission.FOREGROUND_SERVICE"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "startForeground\\([^)]+\\)",
+                    "FOREGROUND_SERVICE",
+                    "NotificationChannel"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Foreground service",
+                    "Notification handling",
+                    "Permission usage"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service implementation",
+                        "Foreground handling",
+                        "Permission validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateForeground",
+                        "checkPermission",
+                        "verifyService"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze foreground",
+                        "Review permissions",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Foreground handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Start service",
+                    "Maintain foreground",
+                    "Bypass restrictions",
+                    "Execute operations",
+                    "Hide activity"
+                ],
+                "requirements": [
+                    "Service permission",
+                    "Foreground access",
+                    "Notification control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test foreground",
+                        "Check persistence",
+                        "Verify operations"
+                    ],
+                    "expected_results": [
+                        "Service persisted",
+                        "Operations executed",
+                        "Activity hidden"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service component",
+                "Foreground handler",
+                "Permission system"
+            ],
+            "tags": [
+                "service",
+                "foreground",
+                "persistence",
+                "abuse"
+            ]
+        },
+        {
+            "id": "SVC-003",
+            "name": "Service Lifecycle Manipulation",
+            "description": "Application's service lifecycle can be manipulated to cause denial of service or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Service disruption and unauthorized execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Service",
+                "methods": [
+                    "onCreate",
+                    "onStartCommand",
+                    "onDestroy"
+                ],
+                "lifecycle": "service"
+            },
+            "detection": {
+                "pattern": [
+                    "onStartCommand\\([^)]+\\)",
+                    "START_STICKY",
+                    "stopSelf\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Lifecycle handling",
+                    "Service restart",
+                    "State management"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service implementation",
+                        "Lifecycle handling",
+                        "State validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateLifecycle",
+                        "checkState",
+                        "verifyService"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze lifecycle",
+                        "Review states",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Lifecycle handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify service",
+                    "Manipulate lifecycle",
+                    "Trigger restart",
+                    "Execute operations",
+                    "Maintain state"
+                ],
+                "requirements": [
+                    "Service access",
+                    "Lifecycle knowledge",
+                    "State control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test lifecycle",
+                        "Check manipulation",
+                        "Verify execution"
+                    ],
+                    "expected_results": [
+                        "Lifecycle manipulated",
+                        "Service restarted",
+                        "Operations executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service component",
+                "Lifecycle handler",
+                "State manager"
+            ],
+            "tags": [
+                "service",
+                "lifecycle",
+                "manipulation",
+                "restart"
+            ]
+        },
+        {
+            "id": "SVC-004",
+            "name": "Service Command Injection",
+            "description": "Application's service command handling can be exploited to inject and execute arbitrary commands.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Command execution and privilege escalation",
+                "exploitability": "Hard"
+            },
+            "affects": {
+                "component": "android.app.Service",
+                "methods": [
+                    "onStartCommand",
+                    "onHandleIntent",
+                    "processCommand"
+                ],
+                "intent": "service_intent"
+            },
+            "detection": {
+                "pattern": [
+                    "onStartCommand\\([^)]+\\)",
+                    "getStringExtra\\([^)]+\\)",
+                    "Runtime\\.exec\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Command handling",
+                    "Intent processing",
+                    "Execution flow"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service implementation",
+                        "Command handling",
+                        "Input validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateCommand",
+                        "sanitizeInput",
+                        "verifyExecution"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze commands",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Command handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify service",
+                    "Craft command",
+                    "Inject payload",
+                    "Execute command",
+                    "Escalate privileges"
+                ],
+                "requirements": [
+                    "Service access",
+                    "Command knowledge",
+                    "Injection vector"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test injection",
+                        "Check execution",
+                        "Verify escalation"
+                    ],
+                    "expected_results": [
+                        "Command injected",
+                        "Payload executed",
+                        "Privileges gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service component",
+                "Command handler",
+                "Execution engine"
+            ],
+            "tags": [
+                "service",
+                "command",
+                "injection",
+                "execution"
+            ]
+        },
+        {
+            "id": "SVC-005",
+            "name": "Service State Exposure",
+            "description": "Application's service state information can be exposed to unauthorized applications.",
+            "severity": {
+                "level": "High",
+                "impact": "Information disclosure and state manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Service",
+                "methods": [
+                    "onBind",
+                    "getState",
+                    "setState"
+                ],
+                "state": "service_state"
+            },
+            "detection": {
+                "pattern": [
+                    "getState\\([^)]+\\)",
+                    "setState\\([^)]+\\)",
+                    "SharedPreferences"
+                ],
+                "method": "static",
+                "indicators": [
+                    "State handling",
+                    "Data storage",
+                    "Access control"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service implementation",
+                        "State handling",
+                        "Access validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateState",
+                        "checkAccess",
+                        "verifyStorage"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze state",
+                        "Review storage",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "State handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify service",
+                    "Access state",
+                    "Extract data",
+                    "Modify state",
+                    "Maintain access"
+                ],
+                "requirements": [
+                    "Service access",
+                    "State knowledge",
+                    "Storage access"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test access",
+                        "Check exposure",
+                        "Verify modification"
+                    ],
+                    "expected_results": [
+                        "State accessed",
+                        "Data extracted",
+                        "State modified"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service component",
+                "State handler",
+                "Storage manager"
+            ],
+            "tags": [
+                "service",
+                "state",
+                "exposure",
+                "storage"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Native Code Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T07:29:00Z",
+        "description": "Native code and JNI-related security vulnerabilities in Android applications including library loading, memory management, and type safety issues"
+    },
+    "vulnerabilities": [
+        {
+            "id": "NATIVE-001",
+            "name": "Native Library Loading Vulnerability",
+            "description": "Application loads native libraries from writable locations or without proper verification, allowing library hijacking and code execution.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution, library hijacking, and system compromise",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "System\\.load\\([^)]+\\)",
+                    "System\\.loadLibrary\\([^)]+\\)",
+                    "load[A-Z][a-zA-Z]*Library\\([^)]+\\)",
+                    "(?<!verify)NativeLibrary\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Library loading",
+                    "Native initialization",
+                    "JNI usage",
+                    "Library path"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Native library usage",
+                        "Loading mechanism",
+                        "Path handling"
+                    ],
+                    "exclusion_patterns": [
+                        "verifyLibrary",
+                        "validateSignature",
+                        "checkLibraryHash"
+                    ],
+                    "validation_steps": [
+                        "Check load location",
+                        "Analyze verification",
+                        "Review permissions",
+                        "Verify integrity"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Library loading"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify library loading",
+                    "Analyze load path",
+                    "Create malicious library",
+                    "Replace target",
+                    "Trigger loading"
+                ],
+                "requirements": [
+                    "Write permission",
+                    "Library creation",
+                    "JNI knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Replace library",
+                        "Trigger load",
+                        "Check execution"
+                    ],
+                    "expected_results": [
+                        "Library loaded",
+                        "Code executed",
+                        "System compromised"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Native loading",
+                "Library management",
+                "JNI interface"
+            ],
+            "tags": [
+                "native",
+                "library",
+                "loading",
+                "jni"
+            ]
+        },
+        {
+            "id": "NATIVE-002",
+            "name": "JNI Type Confusion",
+            "description": "Application fails to properly validate JNI type conversions, leading to type confusion and memory corruption.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Memory corruption, code execution, and application crash",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "GetObjectClass\\([^)]+\\)",
+                    "NewObject[A-Z][a-zA-Z]*\\([^)]+\\)",
+                    "Call[A-Z][a-zA-Z]*Method\\([^)]+\\)",
+                    "(?<!check)Type[A-Z][a-zA-Z]*\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "JNI type handling",
+                    "Object conversion",
+                    "Method calling",
+                    "Type casting"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "JNI usage",
+                        "Type conversion",
+                        "Method invocation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateType",
+                        "checkCast",
+                        "verifyObject"
+                    ],
+                    "validation_steps": [
+                        "Check type handling",
+                        "Analyze conversions",
+                        "Review casting",
+                        "Verify safety"
+                    ],
+                    "context_requirements": [
+                        "JNI implementation",
+                        "Type operations"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify type conversion",
+                    "Analyze validation",
+                    "Create malicious object",
+                    "Trigger confusion",
+                    "Exploit memory"
+                ],
+                "requirements": [
+                    "JNI knowledge",
+                    "Type manipulation",
+                    "Memory control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Pass wrong type",
+                        "Trigger conversion",
+                        "Monitor memory"
+                    ],
+                    "expected_results": [
+                        "Type confused",
+                        "Memory corrupted",
+                        "Crash triggered"
+                    ]
+                }
+            },
+            "affected_components": [
+                "JNI interface",
+                "Type system",
+                "Memory management"
+            ],
+            "tags": [
+                "native",
+                "jni",
+                "type-confusion",
+                "memory"
+            ]
+        },
+        {
+            "id": "NATIVE-003",
+            "name": "Native Method Hooking",
+            "description": "Application exposes native methods without proper protection, allowing unauthorized hooking and function interception.",
+            "severity": {
+                "level": "High",
+                "impact": "Function hijacking, data theft, and behavior modification",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "native\\s+[^;]+;",
+                    "RegisterNatives\\([^)]+\\)",
+                    "JNINativeMethod\\s+[^;]+",
+                    "(?<!protected)\\s+native\\s+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Native methods",
+                    "JNI registration",
+                    "Function mapping",
+                    "Method exposure"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Native methods",
+                        "JNI registration",
+                        "Method protection"
+                    ],
+                    "exclusion_patterns": [
+                        "verifyNative",
+                        "protectMethod",
+                        "secureHook"
+                    ],
+                    "validation_steps": [
+                        "Check protection",
+                        "Analyze exposure",
+                        "Review registration",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Method registration"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify native method",
+                    "Analyze protection",
+                    "Create hook",
+                    "Install interceptor",
+                    "Capture data"
+                ],
+                "requirements": [
+                    "Native hooking",
+                    "JNI knowledge",
+                    "Function interception"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Install hook",
+                        "Call method",
+                        "Check interception"
+                    ],
+                    "expected_results": [
+                        "Hook installed",
+                        "Function intercepted",
+                        "Data captured"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Native methods",
+                "JNI interface",
+                "Method protection"
+            ],
+            "tags": [
+                "native",
+                "hooking",
+                "interception",
+                "jni"
+            ]
+        }
+    ]
+}

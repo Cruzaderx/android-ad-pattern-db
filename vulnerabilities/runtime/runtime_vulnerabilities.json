@@ -1,0 +1,458 @@
+{
+    "metadata": {
+        "category": "Runtime Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T06:21:00Z",
+        "description": "Runtime-related security vulnerabilities including dynamic code loading, reflection abuse, and runtime manipulation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "RUNTIME-003",
+            "name": "Runtime Method Hooking",
+            "description": "Application is vulnerable to runtime method hooking, allowing attackers to intercept and modify method behavior during execution.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Method behavior modification, security bypass, and data interception",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Method\\.invoke\\([^)]+\\)",
+                    "Proxy\\.newProxyInstance\\(",
+                    "InvocationHandler\\{",
+                    "methodProxy\\.invokeSuper\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Method invocation",
+                    "Proxy creation",
+                    "Handler implementation",
+                    "Method interception"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Runtime method usage",
+                        "Proxy implementation",
+                        "Method handling"
+                    ],
+                    "exclusion_patterns": [
+                        "verifyMethodAccess",
+                        "secureInvocation",
+                        "validateProxy"
+                    ],
+                    "validation_steps": [
+                        "Check method handling",
+                        "Analyze proxy usage",
+                        "Review invocation",
+                        "Verify protection"
+                    ],
+                    "context_requirements": [
+                        "Method interception",
+                        "Runtime manipulation"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify target method",
+                    "Create proxy handler",
+                    "Implement interception",
+                    "Hook method calls",
+                    "Modify behavior"
+                ],
+                "requirements": [
+                    "Runtime access",
+                    "Proxy knowledge",
+                    "Method analysis"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Hook target method",
+                        "Intercept calls",
+                        "Modify behavior"
+                    ],
+                    "expected_results": [
+                        "Method hooked",
+                        "Calls intercepted",
+                        "Behavior changed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Method invocation",
+                "Runtime behavior",
+                "Security controls"
+            ],
+            "tags": [
+                "runtime",
+                "hooking",
+                "method",
+                "proxy"
+            ]
+        },
+        {
+            "id": "RUNTIME-004",
+            "name": "Dex Class Loading Vulnerability",
+            "description": "Application loads dex files from unverified sources at runtime, enabling arbitrary code execution through malicious dex injection.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution, security bypass, and application compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "DexClassLoader\\([^)]+\\)",
+                    "loadClass\\([^)]+\\)",
+                    "optimizedDirectory",
+                    "(?<!verified)loadDex\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Dex loading",
+                    "Class loading",
+                    "Dynamic code",
+                    "Runtime loading"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Dex file usage",
+                        "Dynamic loading",
+                        "Class loading"
+                    ],
+                    "exclusion_patterns": [
+                        "verifyDexSignature",
+                        "validateDexSource",
+                        "checkDexIntegrity"
+                    ],
+                    "validation_steps": [
+                        "Check loading source",
+                        "Verify dex integrity",
+                        "Analyze class loading",
+                        "Review security"
+                    ],
+                    "context_requirements": [
+                        "Dynamic code loading",
+                        "Dex manipulation"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Create malicious dex",
+                    "Place dex file",
+                    "Trigger loading",
+                    "Execute injected code",
+                    "Maintain persistence"
+                ],
+                "requirements": [
+                    "Dex creation tools",
+                    "File system access",
+                    "Loading trigger"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Load custom dex",
+                        "Execute code",
+                        "Verify persistence"
+                    ],
+                    "expected_results": [
+                        "Dex loaded",
+                        "Code executed",
+                        "Persistence achieved"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Class loading",
+                "Code execution",
+                "Runtime security"
+            ],
+            "tags": [
+                "dex",
+                "code-execution",
+                "loading",
+                "runtime"
+            ]
+        },
+        {
+            "id": "RUNTIME-005",
+            "name": "Runtime Command Execution",
+            "description": "Application executes system commands with unvalidated input, allowing command injection and arbitrary code execution.",
+            "severity": {
+                "level": "Critical",
+                "impact": "System command execution, privilege escalation, and system compromise",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Runtime\\.exec\\([^)]+\\)",
+                    "ProcessBuilder\\([^)]+\\)",
+                    "System\\.loadLibrary\\([^)]+\\)",
+                    "(?<!validated)execCommand\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Command execution",
+                    "Process creation",
+                    "System operations",
+                    "Runtime manipulation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Command execution",
+                        "Process handling",
+                        "System access"
+                    ],
+                    "exclusion_patterns": [
+                        "validateCommand",
+                        "sanitizeInput",
+                        "secureExecution"
+                    ],
+                    "validation_steps": [
+                        "Check command input",
+                        "Analyze execution",
+                        "Review privileges",
+                        "Verify sandboxing"
+                    ],
+                    "context_requirements": [
+                        "System interaction",
+                        "Command execution"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 95,
+                    "dynamic_analysis": 90,
+                    "manual_review": 85
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify command execution",
+                    "Craft malicious input",
+                    "Inject commands",
+                    "Escalate privileges",
+                    "Execute payload"
+                ],
+                "requirements": [
+                    "Command injection point",
+                    "System knowledge",
+                    "Payload creation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Inject test command",
+                        "Execute payload",
+                        "Check privileges"
+                    ],
+                    "expected_results": [
+                        "Command executed",
+                        "Payload successful",
+                        "Privileges gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Runtime execution",
+                "System commands",
+                "Process handling"
+            ],
+            "tags": [
+                "runtime",
+                "command-execution",
+                "system",
+                "injection"
+            ]
+        },
+        {
+            "id": "RUNTIME-001",
+            "name": "Unsafe Dynamic Code Loading",
+            "description": "Application loads code dynamically from unverified sources without proper integrity checks or signature verification.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code injection, malicious code execution, and security bypass",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "DexClassLoader\\([^)]+\\)",
+                    "PathClassLoader\\([^)]+\\)",
+                    "loadClass\\([^)]+\\)",
+                    "(?<!verified)createPackageContext\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Dynamic class loading",
+                    "External dex loading",
+                    "Runtime code execution",
+                    "Package context creation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Dynamic loading present",
+                        "External code execution",
+                        "ClassLoader usage"
+                    ],
+                    "exclusion_patterns": [
+                        "verifyDexSignature",
+                        "validateCodeSource",
+                        "checkCodeIntegrity"
+                    ],
+                    "validation_steps": [
+                        "Check loading source",
+                        "Verify integrity checks",
+                        "Analyze code origin",
+                        "Review security measures"
+                    ],
+                    "context_requirements": [
+                        "App loads external code",
+                        "Dynamic class loading"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify loading point",
+                    "Create malicious dex",
+                    "Replace target code",
+                    "Trigger loading"
+                ],
+                "requirements": [
+                    "Dex creation tools",
+                    "File system access",
+                    "Code injection capability"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Replace dex file",
+                        "Trigger code load",
+                        "Verify execution"
+                    ],
+                    "expected_results": [
+                        "Code replaced",
+                        "Loading successful",
+                        "Execution confirmed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "ClassLoader",
+                "Dynamic loading",
+                "Code execution"
+            ],
+            "tags": [
+                "dynamic-loading",
+                "code-execution",
+                "classloader",
+                "injection"
+            ]
+        },
+        {
+            "id": "RUNTIME-002",
+            "name": "Reflection API Abuse",
+            "description": "Application uses reflection to access private/protected components or bypass security controls without proper validation.",
+            "severity": {
+                "level": "High",
+                "impact": "Security bypass, access control violation, and protection circumvention",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Class\\.forName\\([^)]+\\)",
+                    "getDeclaredMethod\\([^)]+\\)",
+                    "setAccessible\\(true\\)",
+                    "invoke\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Reflection usage",
+                    "Method access",
+                    "Accessibility modification",
+                    "Dynamic invocation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Reflection API usage",
+                        "Access modification",
+                        "Method invocation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateReflection",
+                        "secureMethodAccess",
+                        "checkPermission"
+                    ],
+                    "validation_steps": [
+                        "Check reflection target",
+                        "Analyze access control",
+                        "Review invocation context",
+                        "Verify permissions"
+                    ],
+                    "context_requirements": [
+                        "App uses reflection",
+                        "Dynamic access needed"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify reflection usage",
+                    "Analyze target methods",
+                    "Craft reflection calls",
+                    "Bypass access controls"
+                ],
+                "requirements": [
+                    "Java reflection knowledge",
+                    "Target class analysis",
+                    "Access to app runtime"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Access private methods",
+                        "Modify protected fields",
+                        "Invoke restricted APIs"
+                    ],
+                    "expected_results": [
+                        "Access granted",
+                        "Modification successful",
+                        "Controls bypassed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Reflection API",
+                "Access controls",
+                "Method invocation"
+            ],
+            "tags": [
+                "reflection",
+                "access-control",
+                "bypass",
+                "runtime"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Intent Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:44:00Z",
+        "description": "Advanced intent-related security vulnerabilities in Android applications including deep link attacks, intent redirection, and broadcast manipulation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "INTENT-004",
+            "name": "Deep Link Hijacking",
+            "description": "Application implements deep links without proper validation, enabling URL scheme hijacking and malicious intent handling.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Intent hijacking, data theft, and malicious redirection",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "<data\\s+android:scheme=[^>]+>",
+                    "getData\\(\\)\\.getScheme\\(\\)",
+                    "(?<!validate)DeepLink[A-Z][a-zA-Z]*\\.[^;]+",
+                    "parseUri\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Deep links",
+                    "URL schemes",
+                    "Intent filters",
+                    "Link handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Deep link usage",
+                        "Scheme handling",
+                        "Intent validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateScheme",
+                        "checkDeepLink",
+                        "secureIntent"
+                    ],
+                    "validation_steps": [
+                        "Check schemes",
+                        "Analyze handling",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Deep link implementation",
+                        "Intent handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify schemes",
+                    "Create malicious URL",
+                    "Trigger handling",
+                    "Hijack intent",
+                    "Extract data"
+                ],
+                "requirements": [
+                    "Deep link knowledge",
+                    "URL crafting",
+                    "Intent manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test schemes",
+                        "Send intent",
+                        "Check handling"
+                    ],
+                    "expected_results": [
+                        "Link hijacked",
+                        "Intent handled",
+                        "Data accessed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Deep link handler",
+                "Intent system",
+                "URL processor"
+            ],
+            "tags": [
+                "deep-link",
+                "intent",
+                "url-scheme",
+                "hijacking"
+            ]
+        },
+        {
+            "id": "INTENT-005",
+            "name": "PendingIntent Misuse",
+            "description": "Application creates mutable PendingIntents or exposes them without proper protection, enabling intent manipulation and privilege escalation.",
+            "severity": {
+                "level": "High",
+                "impact": "Intent manipulation, privilege escalation, and unauthorized access",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "PendingIntent\\.get[A-Z][a-zA-Z]*\\([^)]+\\)",
+                    "FLAG_[A-Z_]+MUTABLE",
+                    "(?<!immutable)PendingIntent\\.[^;]+",
+                    "setFlags\\([^)]*FLAG_[^)]*\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "PendingIntent usage",
+                    "Flag settings",
+                    "Intent creation",
+                    "Permission handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "PendingIntent usage",
+                        "Flag configuration",
+                        "Permission handling"
+                    ],
+                    "exclusion_patterns": [
+                        "FLAG_IMMUTABLE",
+                        "securePending",
+                        "validateIntent"
+                    ],
+                    "validation_steps": [
+                        "Check flags",
+                        "Analyze creation",
+                        "Review usage",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "PendingIntent implementation",
+                        "Security configuration"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify PendingIntent",
+                    "Check mutability",
+                    "Modify intent",
+                    "Escalate privileges",
+                    "Execute payload"
+                ],
+                "requirements": [
+                    "Intent knowledge",
+                    "Flag manipulation",
+                    "Permission understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Check mutability",
+                        "Modify intent",
+                        "Execute intent"
+                    ],
+                    "expected_results": [
+                        "Intent modified",
+                        "Privileges gained",
+                        "Payload executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "PendingIntent system",
+                "Permission handler",
+                "Intent processor"
+            ],
+            "tags": [
+                "pending-intent",
+                "privilege-escalation",
+                "intent",
+                "security"
+            ]
+        },
+        {
+            "id": "INTENT-006",
+            "name": "Broadcast Intent Manipulation",
+            "description": "Application broadcasts sensitive data or handles broadcasts without proper protection, enabling data interception and injection attacks.",
+            "severity": {
+                "level": "High",
+                "impact": "Data interception, intent injection, and information disclosure",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "sendBroadcast\\([^)]+\\)",
+                    "registerReceiver\\([^)]+\\)",
+                    "(?<!protected)BroadcastReceiver\\.[^;]+",
+                    "LocalBroadcastManager\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Broadcast usage",
+                    "Receiver registration",
+                    "Intent handling",
+                    "Data transmission"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Broadcast handling",
+                        "Receiver usage",
+                        "Intent protection"
+                    ],
+                    "exclusion_patterns": [
+                        "LocalBroadcastManager",
+                        "protectedBroadcast",
+                        "secureSend"
+                    ],
+                    "validation_steps": [
+                        "Check broadcasts",
+                        "Analyze receivers",
+                        "Review protection",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Broadcast implementation",
+                        "Security controls"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Monitor broadcasts",
+                    "Intercept data",
+                    "Inject intent",
+                    "Manipulate receiver",
+                    "Extract information"
+                ],
+                "requirements": [
+                    "Broadcast knowledge",
+                    "Intent crafting",
+                    "Receiver manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Send broadcast",
+                        "Intercept data",
+                        "Inject intent"
+                    ],
+                    "expected_results": [
+                        "Data intercepted",
+                        "Intent injected",
+                        "Information leaked"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Broadcast system",
+                "Intent handler",
+                "Data processor"
+            ],
+            "tags": [
+                "broadcast",
+                "intent",
+                "interception",
+                "injection"
+            ]
+        }
+    ]
+}

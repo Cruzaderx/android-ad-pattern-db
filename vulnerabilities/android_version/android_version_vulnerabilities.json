@@ -1,0 +1,469 @@
+{
+    "metadata": {
+        "category": "Android Version-Specific",
+        "version": "1.0.0",
+        "last_updated": "2025-02-24T05:08:00Z",
+        "description": "Version-specific vulnerabilities affecting different Android SDK levels"
+    },
+    "vulnerabilities": [
+        {
+            "id": "AVS-001",
+            "name": "Android 14 Predictive Back Gesture Bypass",
+            "description": "Application's predictive back gesture handling can be exploited to manipulate navigation state and bypass security controls.",
+            "severity": {
+                "level": "High",
+                "impact": "Navigation manipulation and security control bypass",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.window.BackEvent",
+                "methods": [
+                    "onBackPressed",
+                    "enableOnBackInvokedCallback"
+                ],
+                "versions": "Android 14+"
+            },
+            "detection": {
+                "pattern": [
+                    "onBackPressed\\([^)]*\\)",
+                    "enableOnBackInvokedCallback\\([^)]*\\)",
+                    "android:enableOnBackInvokedCallback"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Back gesture handling",
+                    "Navigation implementation",
+                    "Callback configuration"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Monitor back gesture events",
+                    "Intercept navigation callbacks",
+                    "Manipulate navigation state",
+                    "Bypass security boundaries",
+                    "Execute unauthorized navigation"
+                ],
+                "requirements": [
+                    "Android 14+ device",
+                    "Back gesture access",
+                    "Navigation control"
+                ]
+            }
+        },
+        {
+            "id": "AVS-002",
+            "name": "Android 14 Photo Picker API Bypass",
+            "description": "Application's photo picker implementation can be exploited to access photos outside granted permissions.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Unauthorized photo access and privacy violation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.provider.MediaStore",
+                "methods": [
+                    "pickImages",
+                    "createPickerIntent",
+                    "getPickerInitialUri"
+                ],
+                "versions": "Android 14+"
+            },
+            "detection": {
+                "pattern": [
+                    "pickImages\\([^)]*\\)",
+                    "createPickerIntent\\([^)]*\\)",
+                    "READ_MEDIA_VISUAL_USER_SELECTED"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Photo picker usage",
+                    "Media access",
+                    "Permission handling"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Intercept picker intent",
+                    "Modify selection parameters",
+                    "Bypass scope restrictions",
+                    "Access unauthorized photos",
+                    "Extract media content"
+                ],
+                "requirements": [
+                    "Android 14+ device",
+                    "Photo picker access",
+                    "Intent manipulation capability"
+                ]
+            }
+        },
+        {
+            "id": "AVS-003",
+            "name": "Android 14 Foreground Service Restriction Bypass",
+            "description": "Application can bypass foreground service restrictions to execute long-running operations without proper user notification.",
+            "severity": {
+                "level": "High",
+                "impact": "Background execution and battery drain",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Service",
+                "methods": [
+                    "startForeground",
+                    "getForegroundServiceType",
+                    "setForegroundServiceType"
+                ],
+                "versions": "Android 14+"
+            },
+            "detection": {
+                "pattern": [
+                    "startForeground\\([^)]*\\)",
+                    "FOREGROUND_SERVICE_TYPE",
+                    "android:foregroundServiceType"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Service implementation",
+                    "Foreground configuration",
+                    "Type declaration"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Analyze service implementation",
+                    "Identify type restrictions",
+                    "Modify service declaration",
+                    "Bypass type validation",
+                    "Execute unrestricted service"
+                ],
+                "requirements": [
+                    "Android 14+ device",
+                    "Service control",
+                    "Manifest modification capability"
+                ]
+            }
+        },
+        {
+            "id": "AVS-004",
+            "name": "Android 14 Per-App Language Preference Exploitation",
+            "description": "Application's language preference handling can be exploited to manipulate UI state and bypass localization-based security controls.",
+            "severity": {
+                "level": "Medium",
+                "impact": "UI manipulation and localization bypass",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.LocaleManager",
+                "methods": [
+                    "setApplicationLocales",
+                    "getApplicationLocales",
+                    "getSystemLocales"
+                ],
+                "versions": "Android 14+"
+            },
+            "detection": {
+                "pattern": [
+                    "setApplicationLocales\\([^)]*\\)",
+                    "getApplicationLocales\\([^)]*\\)",
+                    "android:localeConfig"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Locale handling",
+                    "Language configuration",
+                    "Preference management"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Monitor locale changes",
+                    "Intercept preference updates",
+                    "Modify language settings",
+                    "Trigger UI reloads",
+                    "Exploit state transitions"
+                ],
+                "requirements": [
+                    "Android 14+ device",
+                    "Locale access",
+                    "Configuration control"
+                ]
+            }
+        },
+        {
+            "id": "AVS-005",
+            "name": "Android 13 Notification Permission Bypass",
+            "description": "Application can bypass notification permission requirements to post notifications without user consent.",
+            "severity": {
+                "level": "High",
+                "impact": "Unauthorized notification display",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.NotificationManager",
+                "methods": [
+                    "notify",
+                    "createNotificationChannel",
+                    "POST_NOTIFICATIONS"
+                ],
+                "versions": "Android 13+"
+            },
+            "detection": {
+                "pattern": [
+                    "notify\\([^)]*\\)",
+                    "createNotificationChannel\\([^)]*\\)",
+                    "POST_NOTIFICATIONS"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Notification handling",
+                    "Permission checking",
+                    "Channel creation"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Analyze notification flow",
+                    "Identify permission checks",
+                    "Bypass permission validation",
+                    "Create unauthorized channel",
+                    "Post notifications directly"
+                ],
+                "requirements": [
+                    "Android 13+ device",
+                    "Notification access",
+                    "Permission manipulation"
+                ]
+            }
+        },
+        {
+            "id": "AVS-006",
+            "name": "Android 13 Themed Icons Exploitation",
+            "description": "Application's themed icon implementation can be exploited to manipulate launcher appearance and impersonate system apps.",
+            "severity": {
+                "level": "Medium",
+                "impact": "Visual spoofing and user deception",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Activity",
+                "methods": [
+                    "setIcon",
+                    "android:icon",
+                    "android:roundIcon"
+                ],
+                "versions": "Android 13+"
+            },
+            "detection": {
+                "pattern": [
+                    "android:icon=\"[^\"]*monochrome",
+                    "android:roundIcon=\"[^\"]*monochrome",
+                    "setIcon\\([^)]*\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Icon implementation",
+                    "Theme handling",
+                    "Resource configuration"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Analyze icon resources",
+                    "Identify theme handling",
+                    "Modify icon assets",
+                    "Manipulate appearance",
+                    "Spoof system identity"
+                ],
+                "requirements": [
+                    "Android 13+ device",
+                    "Resource access",
+                    "Theme control"
+                ]
+            }
+        },
+        {
+            "id": "AVS-007",
+            "name": "Android 13 Clipboard Preview Bypass",
+            "description": "Application can bypass clipboard preview restrictions to access clipboard content without user awareness.",
+            "severity": {
+                "level": "High",
+                "impact": "Clipboard data exposure",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.ClipboardManager",
+                "methods": [
+                    "getPrimaryClip",
+                    "hasPrimaryClip",
+                    "addPrimaryClipChangedListener"
+                ],
+                "versions": "Android 13+"
+            },
+            "detection": {
+                "pattern": [
+                    "getPrimaryClip\\([^)]*\\)",
+                    "hasPrimaryClip\\([^)]*\\)",
+                    "addPrimaryClipChangedListener\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Clipboard access",
+                    "Preview handling",
+                    "Content monitoring"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Monitor clipboard changes",
+                    "Intercept preview events",
+                    "Bypass visibility checks",
+                    "Access clipboard data",
+                    "Extract sensitive content"
+                ],
+                "requirements": [
+                    "Android 13+ device",
+                    "Clipboard access",
+                    "Event monitoring capability"
+                ]
+            }
+        },
+        {
+            "id": "AVS-008",
+            "name": "Android 12 Splash Screen Manipulation",
+            "description": "Application's splash screen implementation can be exploited to manipulate app startup flow and execute unauthorized operations.",
+            "severity": {
+                "level": "Medium",
+                "impact": "Startup flow manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.window.SplashScreen",
+                "methods": [
+                    "installSplashScreen",
+                    "setOnExitAnimationListener",
+                    "setKeepOnScreenCondition"
+                ],
+                "versions": "Android 12+"
+            },
+            "detection": {
+                "pattern": [
+                    "installSplashScreen\\([^)]*\\)",
+                    "setOnExitAnimationListener\\([^)]*\\)",
+                    "setKeepOnScreenCondition\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Splash screen handling",
+                    "Animation control",
+                    "Screen condition management"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Analyze splash implementation",
+                    "Identify exit conditions",
+                    "Manipulate screen state",
+                    "Extend display duration",
+                    "Execute background operations"
+                ],
+                "requirements": [
+                    "Android 12+ device",
+                    "Splash screen access",
+                    "Animation control"
+                ]
+            }
+        },
+        {
+            "id": "AVS-009",
+            "name": "Android 12 Performance Class Bypass",
+            "description": "Application can bypass performance class restrictions to access enhanced capabilities without meeting requirements.",
+            "severity": {
+                "level": "Medium",
+                "impact": "Resource access and performance manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.PerformanceClass",
+                "methods": [
+                    "getPerformanceClass",
+                    "isAtLeastPerformanceClass",
+                    "PROPERTY_PERFORMANCE_CLASS"
+                ],
+                "versions": "Android 12+"
+            },
+            "detection": {
+                "pattern": [
+                    "getPerformanceClass\\([^)]*\\)",
+                    "isAtLeastPerformanceClass\\([^)]*\\)",
+                    "PROPERTY_PERFORMANCE_CLASS"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Performance checking",
+                    "Class validation",
+                    "Capability access"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Analyze performance checks",
+                    "Identify class validation",
+                    "Modify reported class",
+                    "Bypass restrictions",
+                    "Access enhanced features"
+                ],
+                "requirements": [
+                    "Android 12+ device",
+                    "Performance class access",
+                    "System property modification"
+                ]
+            }
+        },
+        {
+            "id": "AVS-010",
+            "name": "Android 12 Material You Theme Exploitation",
+            "description": "Application's Material You implementation can be exploited to manipulate system-wide theming and execute UI-based attacks.",
+            "severity": {
+                "level": "Medium",
+                "impact": "UI manipulation and visual deception",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.WallpaperColors",
+                "methods": [
+                    "getWallpaperColors",
+                    "getColorScheme",
+                    "getDynamicColors"
+                ],
+                "versions": "Android 12+"
+            },
+            "detection": {
+                "pattern": [
+                    "getWallpaperColors\\([^)]*\\)",
+                    "getColorScheme\\([^)]*\\)",
+                    "getDynamicColors\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Theme handling",
+                    "Color extraction",
+                    "Dynamic styling"
+                ]
+            },
+            "exploit": {
+                "steps": [
+                    "Monitor theme changes",
+                    "Intercept color extraction",
+                    "Manipulate color scheme",
+                    "Inject custom colors",
+                    "Execute visual attacks"
+                ],
+                "requirements": [
+                    "Android 12+ device",
+                    "Theme access",
+                    "Color manipulation capability"
+                ]
+            }
+        }
+    ]
+}

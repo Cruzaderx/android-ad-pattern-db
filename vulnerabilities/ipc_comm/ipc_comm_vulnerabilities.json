@@ -1,0 +1,304 @@
+{
+    "metadata": {
+        "category": "Inter-App Communication",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T10:54:00Z",
+        "description": "Inter-app communication vulnerabilities including content provider exposure, broadcast receiver vulnerabilities, and custom permission abuse"
+    },
+    "vulnerabilities": [
+        {
+            "id": "IAC-001",
+            "name": "Content Provider URI Permission Bypass",
+            "description": "Application fails to properly enforce URI permissions, enabling unauthorized access to content provider data.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Data exposure and unauthorized access",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.ContentProvider",
+                "permissions": [
+                    "android.permission.GRANT_URI_PERMISSION"
+                ],
+                "flags": [
+                    "FLAG_GRANT_READ_URI_PERMISSION",
+                    "FLAG_GRANT_WRITE_URI_PERMISSION"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "grantUriPermission\\([^)]+\\)",
+                    "<grant-uri-permission",
+                    "content://[^/]+/"
+                ],
+                "method": "static",
+                "indicators": [
+                    "URI permission handling",
+                    "Content provider access",
+                    "Permission granting"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Provider implementation",
+                        "Permission handling",
+                        "URI validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePermission",
+                        "checkAccess",
+                        "verifyUri"
+                    ],
+                    "validation_steps": [
+                        "Check permissions",
+                        "Analyze URIs",
+                        "Review grants",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Provider implementation",
+                        "Permission handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify provider",
+                    "Analyze permissions",
+                    "Craft URI",
+                    "Bypass checks",
+                    "Access data"
+                ],
+                "requirements": [
+                    "Provider URI",
+                    "Permission knowledge",
+                    "Access patterns"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test permissions",
+                        "Check access",
+                        "Verify bypass"
+                    ],
+                    "expected_results": [
+                        "Permissions bypassed",
+                        "Data accessed",
+                        "Controls evaded"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Content provider",
+                "Permission system",
+                "URI handler"
+            ],
+            "tags": [
+                "content-provider",
+                "permissions",
+                "uri",
+                "bypass"
+            ]
+        },
+        {
+            "id": "IAC-002",
+            "name": "Broadcast Receiver Hijacking",
+            "description": "Application's broadcast receiver can be hijacked to intercept sensitive broadcasts or inject malicious data.",
+            "severity": {
+                "level": "High",
+                "impact": "Data interception and injection",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.BroadcastReceiver",
+                "manifest": "AndroidManifest.xml",
+                "elements": [
+                    "receiver",
+                    "intent-filter"
+                ],
+                "registration": "dynamic"
+            },
+            "detection": {
+                "pattern": [
+                    "registerReceiver\\([^)]+\\)",
+                    "<receiver[^>]+exported=\"true\"",
+                    "sendBroadcast\\([^)]+\\)",
+                    "onReceive\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Receiver registration",
+                    "Broadcast handling",
+                    "Intent processing"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Receiver implementation",
+                        "Registration method",
+                        "Intent handling"
+                    ],
+                    "exclusion_patterns": [
+                        "validateBroadcast",
+                        "checkIntent",
+                        "verifySource"
+                    ],
+                    "validation_steps": [
+                        "Check registration",
+                        "Analyze intents",
+                        "Review handling",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Receiver implementation",
+                        "Intent handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Register receiver",
+                    "Intercept broadcasts",
+                    "Inject data",
+                    "Manipulate flow",
+                    "Extract information"
+                ],
+                "requirements": [
+                    "Receiver knowledge",
+                    "Intent patterns",
+                    "Registration timing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test registration",
+                        "Check interception",
+                        "Verify injection"
+                    ],
+                    "expected_results": [
+                        "Broadcasts intercepted",
+                        "Data injected",
+                        "Flow manipulated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Broadcast receiver",
+                "Intent handler",
+                "Registration manager"
+            ],
+            "tags": [
+                "broadcast",
+                "receiver",
+                "hijacking",
+                "injection"
+            ]
+        },
+        {
+            "id": "IAC-003",
+            "name": "Custom Permission Abuse",
+            "description": "Application's custom permissions can be abused through permission definition conflicts or protection level bypass.",
+            "severity": {
+                "level": "High",
+                "impact": "Permission escalation and unauthorized access",
+                "exploitability": "Hard"
+            },
+            "affects": {
+                "component": "android.content.pm.PackageManager",
+                "manifest": "AndroidManifest.xml",
+                "elements": [
+                    "permission",
+                    "uses-permission"
+                ],
+                "protection": "signature|system"
+            },
+            "detection": {
+                "pattern": [
+                    "<permission android:name=",
+                    "android:protectionLevel=",
+                    "checkPermission\\([^)]+\\)",
+                    "enforcePermission\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Permission definition",
+                    "Protection level",
+                    "Permission checking"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Permission implementation",
+                        "Protection level",
+                        "Check mechanism"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePermission",
+                        "checkProtection",
+                        "verifyAccess"
+                    ],
+                    "validation_steps": [
+                        "Check definitions",
+                        "Analyze levels",
+                        "Review checks",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Permission implementation",
+                        "Protection handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Analyze permissions",
+                    "Find conflicts",
+                    "Create definition",
+                    "Bypass protection",
+                    "Escalate access"
+                ],
+                "requirements": [
+                    "Permission knowledge",
+                    "Protection understanding",
+                    "Definition timing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test definition",
+                        "Check protection",
+                        "Verify bypass"
+                    ],
+                    "expected_results": [
+                        "Conflict created",
+                        "Protection bypassed",
+                        "Access gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Package manager",
+                "Permission system",
+                "Protection handler"
+            ],
+            "tags": [
+                "permissions",
+                "custom",
+                "protection",
+                "escalation"
+            ]
+        }
+    ]
+}

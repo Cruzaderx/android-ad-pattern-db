@@ -1,0 +1,497 @@
+{
+    "metadata": {
+        "category": "Fragment Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T11:30:00Z",
+        "description": "Fragment-related security vulnerabilities including injection, state manipulation, and lifecycle exploitation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "FRAG-001",
+            "name": "Fragment Injection",
+            "description": "Application's fragment handling can be exploited to inject malicious fragments and execute unauthorized operations.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution and data theft",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "androidx.fragment.app.Fragment",
+                "methods": [
+                    "setArguments",
+                    "instantiate",
+                    "onCreateView"
+                ],
+                "version": "pre-API 26"
+            },
+            "detection": {
+                "pattern": [
+                    "Fragment\\.instantiate\\([^)]+\\)",
+                    "setArguments\\([^)]+\\)",
+                    "getArguments\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Fragment creation",
+                    "Argument handling",
+                    "View inflation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Fragment implementation",
+                        "Argument handling",
+                        "View creation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateFragment",
+                        "checkArguments",
+                        "verifyClass"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze arguments",
+                        "Review creation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Fragment implementation",
+                        "Argument handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Create fragment",
+                    "Inject arguments",
+                    "Force instantiation",
+                    "Execute code",
+                    "Extract data"
+                ],
+                "requirements": [
+                    "Fragment access",
+                    "Argument control",
+                    "Class knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test injection",
+                        "Check execution",
+                        "Verify data"
+                    ],
+                    "expected_results": [
+                        "Fragment injected",
+                        "Code executed",
+                        "Data extracted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Fragment manager",
+                "Argument handler",
+                "View creator"
+            ],
+            "tags": [
+                "fragment",
+                "injection",
+                "arguments",
+                "execution"
+            ]
+        },
+        {
+            "id": "FRAG-002",
+            "name": "Fragment State Manipulation",
+            "description": "Application's fragment state can be manipulated to cause crashes or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Application crash and state manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "androidx.fragment.app.Fragment",
+                "methods": [
+                    "onSaveInstanceState",
+                    "onViewStateRestored",
+                    "onCreate"
+                ],
+                "state": "Bundle"
+            },
+            "detection": {
+                "pattern": [
+                    "onSaveInstanceState\\([^)]+\\)",
+                    "savedInstanceState\\.get[^(]+\\(",
+                    "Bundle\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "State saving",
+                    "State restoration",
+                    "Bundle handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Fragment implementation",
+                        "State handling",
+                        "Bundle validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateState",
+                        "checkBundle",
+                        "verifyRestore"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze state",
+                        "Review bundles",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Fragment implementation",
+                        "State handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify state",
+                    "Modify bundle",
+                    "Trigger restore",
+                    "Cause crash",
+                    "Execute operation"
+                ],
+                "requirements": [
+                    "Fragment access",
+                    "Bundle knowledge",
+                    "State control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test state",
+                        "Check manipulation",
+                        "Verify crash"
+                    ],
+                    "expected_results": [
+                        "State modified",
+                        "Bundle corrupted",
+                        "App crashed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Fragment component",
+                "State handler",
+                "Bundle manager"
+            ],
+            "tags": [
+                "fragment",
+                "state",
+                "bundle",
+                "manipulation"
+            ]
+        },
+        {
+            "id": "FRAG-003",
+            "name": "Fragment Lifecycle Manipulation",
+            "description": "Application's fragment lifecycle can be manipulated to cause data leaks or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Data leakage and unauthorized execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "androidx.fragment.app.Fragment",
+                "methods": [
+                    "onCreate",
+                    "onResume",
+                    "onPause",
+                    "onDestroy"
+                ],
+                "lifecycle": "fragment"
+            },
+            "detection": {
+                "pattern": [
+                    "onCreate\\([^)]+\\)",
+                    "onResume\\([^)]+\\)",
+                    "onPause\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Lifecycle handling",
+                    "State management",
+                    "Data handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Fragment implementation",
+                        "Lifecycle handling",
+                        "State validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateLifecycle",
+                        "checkState",
+                        "verifyData"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze lifecycle",
+                        "Review states",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Fragment implementation",
+                        "Lifecycle handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify lifecycle",
+                    "Trigger transitions",
+                    "Extract data",
+                    "Execute operations",
+                    "Maintain state"
+                ],
+                "requirements": [
+                    "Fragment access",
+                    "Lifecycle knowledge",
+                    "State control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test lifecycle",
+                        "Check manipulation",
+                        "Verify leakage"
+                    ],
+                    "expected_results": [
+                        "Lifecycle manipulated",
+                        "Data leaked",
+                        "Operations executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Fragment component",
+                "Lifecycle handler",
+                "State manager"
+            ],
+            "tags": [
+                "fragment",
+                "lifecycle",
+                "manipulation",
+                "leakage"
+            ]
+        },
+        {
+            "id": "FRAG-004",
+            "name": "Fragment Transaction Abuse",
+            "description": "Application's fragment transactions can be abused to cause memory leaks or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Memory leaks and unauthorized execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "androidx.fragment.app.FragmentTransaction",
+                "methods": [
+                    "add",
+                    "replace",
+                    "remove",
+                    "commit"
+                ],
+                "transaction": "FragmentTransaction"
+            },
+            "detection": {
+                "pattern": [
+                    "beginTransaction\\(\\)",
+                    "commit\\(\\)",
+                    "commitNow\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Transaction handling",
+                    "Fragment operations",
+                    "Commit timing"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Transaction implementation",
+                        "Operation handling",
+                        "Commit validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateTransaction",
+                        "checkOperation",
+                        "verifyCommit"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze operations",
+                        "Review commits",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Transaction implementation",
+                        "Operation handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Create transaction",
+                    "Add operations",
+                    "Force commit",
+                    "Cause leak",
+                    "Execute operation"
+                ],
+                "requirements": [
+                    "Transaction access",
+                    "Operation control",
+                    "Commit timing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test transaction",
+                        "Check leak",
+                        "Verify execution"
+                    ],
+                    "expected_results": [
+                        "Transaction abused",
+                        "Memory leaked",
+                        "Operation executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Fragment manager",
+                "Transaction handler",
+                "Operation processor"
+            ],
+            "tags": [
+                "fragment",
+                "transaction",
+                "abuse",
+                "leak"
+            ]
+        },
+        {
+            "id": "FRAG-005",
+            "name": "Fragment BackStack Manipulation",
+            "description": "Application's fragment backstack can be manipulated to bypass security controls or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Security bypass and unauthorized execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "androidx.fragment.app.FragmentManager",
+                "methods": [
+                    "popBackStack",
+                    "addToBackStack",
+                    "getBackStackEntryCount"
+                ],
+                "backstack": "FragmentManager.BackStackEntry"
+            },
+            "detection": {
+                "pattern": [
+                    "popBackStack\\([^)]+\\)",
+                    "addToBackStack\\([^)]+\\)",
+                    "getBackStackEntryCount\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Backstack handling",
+                    "Entry management",
+                    "Stack operations"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Backstack implementation",
+                        "Entry handling",
+                        "Operation validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateBackStack",
+                        "checkEntry",
+                        "verifyOperation"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze entries",
+                        "Review operations",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Backstack implementation",
+                        "Entry handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify backstack",
+                    "Modify entries",
+                    "Force operations",
+                    "Bypass controls",
+                    "Execute operations"
+                ],
+                "requirements": [
+                    "Backstack access",
+                    "Entry control",
+                    "Operation timing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test backstack",
+                        "Check bypass",
+                        "Verify execution"
+                    ],
+                    "expected_results": [
+                        "Backstack manipulated",
+                        "Controls bypassed",
+                        "Operations executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Fragment manager",
+                "Backstack handler",
+                "Entry processor"
+            ],
+            "tags": [
+                "fragment",
+                "backstack",
+                "manipulation",
+                "bypass"
+            ]
+        }
+    ]
+}

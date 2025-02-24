@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Hardware Access",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T09:36:00Z",
+        "description": "Advanced hardware access vulnerabilities in Android applications including camera, GPS, and sensor data collection"
+    },
+    "vulnerabilities": [
+        {
+            "id": "HW-004",
+            "name": "Camera Background Access",
+            "description": "Application accesses camera in background without proper notification, enabling unauthorized surveillance and privacy violation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Privacy violation, surveillance, and unauthorized recording",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Camera\\.open\\([^)]+\\)",
+                    "(?<!notify)CameraManager\\.[^;]+",
+                    "startPreview\\([^)]+\\)",
+                    "takePicture\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Camera usage",
+                    "Background operation",
+                    "Preview handling",
+                    "Image capture"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Camera access",
+                        "Background state",
+                        "User notification"
+                    ],
+                    "exclusion_patterns": [
+                        "notifyUser",
+                        "checkPermission",
+                        "verifyForeground"
+                    ],
+                    "validation_steps": [
+                        "Check access",
+                        "Analyze state",
+                        "Review notifications",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Camera implementation",
+                        "Background handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Trigger background",
+                    "Access camera",
+                    "Capture images",
+                    "Hide activity",
+                    "Extract data"
+                ],
+                "requirements": [
+                    "Camera access",
+                    "Background control",
+                    "Data extraction"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Check background",
+                        "Access camera",
+                        "Capture data"
+                    ],
+                    "expected_results": [
+                        "Access gained",
+                        "Images captured",
+                        "Data extracted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Camera system",
+                "Background service",
+                "Data handler"
+            ],
+            "tags": [
+                "hardware",
+                "camera",
+                "background",
+                "privacy"
+            ]
+        },
+        {
+            "id": "HW-005",
+            "name": "GPS Location Tracking",
+            "description": "Application tracks location without proper consent or notification, enabling unauthorized location tracking and movement profiling.",
+            "severity": {
+                "level": "High",
+                "impact": "Privacy violation, location tracking, and movement profiling",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "LocationManager\\.[^;]+",
+                    "(?<!notify)RequestLocationUpdates\\.[^;]+",
+                    "getLastKnownLocation\\([^)]+\\)",
+                    "ACCESS_FINE_LOCATION"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Location tracking",
+                    "GPS usage",
+                    "Update requests",
+                    "Permission handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Location access",
+                        "Update frequency",
+                        "User consent"
+                    ],
+                    "exclusion_patterns": [
+                        "notifyTracking",
+                        "checkConsent",
+                        "verifyPermission"
+                    ],
+                    "validation_steps": [
+                        "Check tracking",
+                        "Analyze updates",
+                        "Review consent",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Location implementation",
+                        "Consent handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Request updates",
+                    "Track location",
+                    "Store data",
+                    "Profile movement",
+                    "Extract information"
+                ],
+                "requirements": [
+                    "Location access",
+                    "Update control",
+                    "Data storage"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Request location",
+                        "Track movement",
+                        "Store data"
+                    ],
+                    "expected_results": [
+                        "Updates received",
+                        "Movement tracked",
+                        "Data stored"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Location system",
+                "GPS handler",
+                "Data storage"
+            ],
+            "tags": [
+                "hardware",
+                "gps",
+                "tracking",
+                "privacy"
+            ]
+        },
+        {
+            "id": "HW-006",
+            "name": "Sensor Data Collection",
+            "description": "Application collects sensor data without proper disclosure, enabling unauthorized monitoring and behavior profiling.",
+            "severity": {
+                "level": "High",
+                "impact": "Privacy violation, behavior monitoring, and activity profiling",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "SensorManager\\.[^;]+",
+                    "(?<!notify)registerListener\\([^)]+\\)",
+                    "getDefaultSensor\\([^)]+\\)",
+                    "onSensorChanged\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Sensor usage",
+                    "Data collection",
+                    "Event handling",
+                    "Listener registration"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Sensor access",
+                        "Data handling",
+                        "User disclosure"
+                    ],
+                    "exclusion_patterns": [
+                        "notifyCollection",
+                        "checkDisclosure",
+                        "verifyConsent"
+                    ],
+                    "validation_steps": [
+                        "Check sensors",
+                        "Analyze collection",
+                        "Review disclosure",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Sensor implementation",
+                        "Data handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Register listener",
+                    "Collect data",
+                    "Process events",
+                    "Profile behavior",
+                    "Extract patterns"
+                ],
+                "requirements": [
+                    "Sensor access",
+                    "Data collection",
+                    "Pattern analysis"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Register sensors",
+                        "Collect data",
+                        "Analyze patterns"
+                    ],
+                    "expected_results": [
+                        "Data collected",
+                        "Behavior profiled",
+                        "Patterns extracted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Sensor system",
+                "Data collector",
+                "Event handler"
+            ],
+            "tags": [
+                "hardware",
+                "sensors",
+                "monitoring",
+                "privacy"
+            ]
+        }
+    ]
+}

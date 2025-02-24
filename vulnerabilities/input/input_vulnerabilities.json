@@ -1,0 +1,495 @@
+{
+    "metadata": {
+        "category": "Input Validation Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T12:36:00Z",
+        "description": "Input validation and sanitization vulnerabilities including injection attacks, buffer overflows, and validation bypasses"
+    },
+    "vulnerabilities": [
+        {
+            "id": "INP-001",
+            "name": "EditText Input Injection",
+            "description": "Application's EditText input handling can be exploited through injection to execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Data manipulation and code execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.widget.EditText",
+                "methods": [
+                    "setText",
+                    "getText",
+                    "getEditableText"
+                ],
+                "input": "user_input"
+            },
+            "detection": {
+                "pattern": [
+                    "getText\\(\\)\\.toString\\(\\)",
+                    "setText\\([^)]+\\)",
+                    "getEditableText\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Input handling",
+                    "Text processing",
+                    "Validation logic"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Input implementation",
+                        "Text handling",
+                        "Validation checks"
+                    ],
+                    "exclusion_patterns": [
+                        "validateInput",
+                        "sanitizeText",
+                        "checkInput"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze input",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Input implementation",
+                        "Text handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify input",
+                    "Craft payload",
+                    "Inject data",
+                    "Trigger processing",
+                    "Execute operation"
+                ],
+                "requirements": [
+                    "Input access",
+                    "Payload creation",
+                    "Processing control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test injection",
+                        "Check processing",
+                        "Verify execution"
+                    ],
+                    "expected_results": [
+                        "Data injected",
+                        "Payload processed",
+                        "Operation executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "EditText",
+                "Input processor",
+                "Validation handler"
+            ],
+            "tags": [
+                "input",
+                "injection",
+                "validation",
+                "edittext"
+            ]
+        },
+        {
+            "id": "INP-002",
+            "name": "Intent Extra Validation Bypass",
+            "description": "Application's Intent extra validation can be bypassed to inject malicious data or trigger unintended behavior.",
+            "severity": {
+                "level": "High",
+                "impact": "Data injection and component manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.Intent",
+                "methods": [
+                    "getStringExtra",
+                    "getBundleExtra",
+                    "getParcelableExtra"
+                ],
+                "extras": "intent_extras"
+            },
+            "detection": {
+                "pattern": [
+                    "getStringExtra\\([^)]+\\)",
+                    "getBundleExtra\\([^)]+\\)",
+                    "getParcelableExtra\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Extra handling",
+                    "Data extraction",
+                    "Type validation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Intent implementation",
+                        "Extra handling",
+                        "Type validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateExtra",
+                        "checkType",
+                        "verifyData"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze extras",
+                        "Review types",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Intent implementation",
+                        "Extra handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify intent",
+                    "Analyze extras",
+                    "Craft payload",
+                    "Inject data",
+                    "Trigger processing"
+                ],
+                "requirements": [
+                    "Intent access",
+                    "Extra knowledge",
+                    "Type control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test bypass",
+                        "Check processing",
+                        "Verify impact"
+                    ],
+                    "expected_results": [
+                        "Validation bypassed",
+                        "Data injected",
+                        "Processing triggered"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Intent",
+                "Extra handler",
+                "Type validator"
+            ],
+            "tags": [
+                "input",
+                "intent",
+                "validation",
+                "bypass"
+            ]
+        },
+        {
+            "id": "INP-003",
+            "name": "Bundle Data Type Confusion",
+            "description": "Application's Bundle data type handling can be exploited through type confusion to cause crashes or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Application crash and data manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.os.Bundle",
+                "methods": [
+                    "putString",
+                    "getString",
+                    "getParcelable"
+                ],
+                "types": "bundle_data"
+            },
+            "detection": {
+                "pattern": [
+                    "putString\\([^)]+\\)",
+                    "getString\\([^)]+\\)",
+                    "getParcelable\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Type handling",
+                    "Data storage",
+                    "Type checking"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Bundle implementation",
+                        "Type handling",
+                        "Check validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateType",
+                        "checkData",
+                        "verifyBundle"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze types",
+                        "Review data",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Bundle implementation",
+                        "Type handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify bundle",
+                    "Analyze types",
+                    "Create confusion",
+                    "Inject data",
+                    "Trigger crash"
+                ],
+                "requirements": [
+                    "Bundle access",
+                    "Type knowledge",
+                    "Data control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test confusion",
+                        "Check crash",
+                        "Verify impact"
+                    ],
+                    "expected_results": [
+                        "Types confused",
+                        "Data corrupted",
+                        "App crashed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Bundle",
+                "Type system",
+                "Data handler"
+            ],
+            "tags": [
+                "input",
+                "bundle",
+                "type-confusion",
+                "crash"
+            ]
+        },
+        {
+            "id": "INP-004",
+            "name": "Parcelable Data Manipulation",
+            "description": "Application's Parcelable data handling can be exploited to inject malicious data or manipulate object state.",
+            "severity": {
+                "level": "High",
+                "impact": "Data manipulation and state corruption",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.os.Parcelable",
+                "methods": [
+                    "writeToParcel",
+                    "createFromParcel",
+                    "describeContents"
+                ],
+                "data": "parcel_data"
+            },
+            "detection": {
+                "pattern": [
+                    "implements\\s+Parcelable",
+                    "writeToParcel\\([^)]+\\)",
+                    "createFromParcel\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Parcelable usage",
+                    "Data serialization",
+                    "Object creation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Parcelable implementation",
+                        "Data handling",
+                        "State validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateParcel",
+                        "checkState",
+                        "verifyData"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze data",
+                        "Review state",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Parcelable implementation",
+                        "Data handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify object",
+                    "Analyze parcel",
+                    "Craft payload",
+                    "Inject data",
+                    "Manipulate state"
+                ],
+                "requirements": [
+                    "Parcelable access",
+                    "Data structure",
+                    "State control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test injection",
+                        "Check state",
+                        "Verify manipulation"
+                    ],
+                    "expected_results": [
+                        "Data injected",
+                        "State corrupted",
+                        "Object manipulated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Parcelable",
+                "Object state",
+                "Data handler"
+            ],
+            "tags": [
+                "input",
+                "parcelable",
+                "manipulation",
+                "state"
+            ]
+        },
+        {
+            "id": "INP-005",
+            "name": "Input Length Validation",
+            "description": "Application's input length validation can be bypassed to cause buffer overflows or resource exhaustion.",
+            "severity": {
+                "level": "High",
+                "impact": "Resource exhaustion and memory corruption",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.widget.EditText",
+                "methods": [
+                    "setFilters",
+                    "setMaxLength",
+                    "setInputType"
+                ],
+                "validation": "length_check"
+            },
+            "detection": {
+                "pattern": [
+                    "setFilters\\([^)]+\\)",
+                    "setMaxLength\\([^)]+\\)",
+                    "setInputType\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Length validation",
+                    "Input filtering",
+                    "Type checking"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Input implementation",
+                        "Length handling",
+                        "Filter validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateLength",
+                        "checkInput",
+                        "verifyFilter"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze filters",
+                        "Review length",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Input implementation",
+                        "Length handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify input",
+                    "Analyze limits",
+                    "Craft payload",
+                    "Bypass validation",
+                    "Trigger overflow"
+                ],
+                "requirements": [
+                    "Input access",
+                    "Length control",
+                    "Filter knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test bypass",
+                        "Check overflow",
+                        "Verify impact"
+                    ],
+                    "expected_results": [
+                        "Validation bypassed",
+                        "Buffer overflowed",
+                        "Resources exhausted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "EditText",
+                "Input filter",
+                "Length validator"
+            ],
+            "tags": [
+                "input",
+                "length",
+                "validation",
+                "overflow"
+            ]
+        }
+    ]
+}

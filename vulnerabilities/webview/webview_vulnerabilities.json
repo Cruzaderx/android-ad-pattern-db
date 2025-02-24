@@ -1,0 +1,458 @@
+{
+    "metadata": {
+        "category": "WebView Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T05:39:00Z",
+        "description": "WebView-related security vulnerabilities in Android applications"
+    },
+    "vulnerabilities": [
+        {
+            "id": "WEBVIEW-003",
+            "name": "WebView Remote Debugging Enabled",
+            "description": "Application has WebView debugging enabled in release builds, allowing attackers to inspect and manipulate WebView content remotely.",
+            "severity": {
+                "level": "High",
+                "impact": "Remote debugging access, content manipulation, and sensitive data exposure",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "setWebContentsDebuggingEnabled\\(true\\)",
+                    "WebView\\.setWebContentsDebuggingEnabled\\(true\\)",
+                    "android:debuggable=\"true\".*WebView",
+                    "chrome://inspect.*WebView"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Debug configuration",
+                    "WebView debugging",
+                    "Remote inspection",
+                    "Chrome debugging"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Debug flag enabled",
+                        "WebView implementation",
+                        "Release build"
+                    ],
+                    "exclusion_patterns": [
+                        "DEBUG\\s*&&\\s*setWebContentsDebuggingEnabled",
+                        "BuildConfig\\.DEBUG.*setWebContentsDebuggingEnabled"
+                    ],
+                    "validation_steps": [
+                        "Check build type",
+                        "Verify debug settings",
+                        "Analyze WebView config",
+                        "Review debug guards"
+                    ],
+                    "context_requirements": [
+                        "Release build analysis",
+                        "WebView usage"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 95,
+                    "dynamic_analysis": 90,
+                    "manual_review": 85
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Connect to device",
+                    "Access chrome://inspect",
+                    "Locate target WebView",
+                    "Attach debugger",
+                    "Inspect/modify content"
+                ],
+                "requirements": [
+                    "USB/Network access",
+                    "Chrome browser",
+                    "ADB enabled",
+                    "Target app running"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Enable USB debugging",
+                        "Connect debugger",
+                        "Inspect WebView"
+                    ],
+                    "expected_results": [
+                        "Debug connection success",
+                        "WebView visible in Chrome",
+                        "Content inspection possible"
+                    ]
+                }
+            },
+            "affected_components": [
+                "WebView configuration",
+                "Debug settings",
+                "Remote inspection"
+            ],
+            "tags": [
+                "webview",
+                "debugging",
+                "remote-access",
+                "inspection"
+            ]
+        },
+        {
+            "id": "WEBVIEW-004",
+            "name": "Mixed Content Loading",
+            "description": "WebView allows mixed content (HTTP content in HTTPS pages), enabling man-in-the-middle attacks and content injection.",
+            "severity": {
+                "level": "High",
+                "impact": "Content injection, data interception, and security downgrade",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "setMixedContentMode\\(MIXED_CONTENT_ALWAYS_ALLOW\\)",
+                    "setMixedContentMode\\(0\\)",
+                    "loadUrl\\(\"http://[^\"]+\"\\)",
+                    "onReceivedSslError[^{]*\\{[^}]*proceed"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Mixed content settings",
+                    "HTTP URL loading",
+                    "SSL error handling",
+                    "Content security policy"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "HTTPS base URL",
+                        "HTTP resource loading",
+                        "Mixed content handling"
+                    ],
+                    "exclusion_patterns": [
+                        "MIXED_CONTENT_NEVER_ALLOW",
+                        "onReceivedSslError[^{]*\\{[^}]*cancel",
+                        "Content-Security-Policy"
+                    ],
+                    "validation_steps": [
+                        "Check content mode",
+                        "Analyze URL schemes",
+                        "Review SSL handling",
+                        "Verify CSP headers"
+                    ],
+                    "context_requirements": [
+                        "HTTPS content loading",
+                        "Resource inclusion"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 95,
+                    "manual_review": 85
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Intercept HTTPS traffic",
+                    "Identify mixed content",
+                    "Setup MITM proxy",
+                    "Inject malicious content",
+                    "Execute attack payload"
+                ],
+                "requirements": [
+                    "Network access",
+                    "MITM proxy tool",
+                    "HTTP server",
+                    "SSL certificates"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Load mixed content",
+                        "Intercept HTTP resources",
+                        "Modify loaded content"
+                    ],
+                    "expected_results": [
+                        "Content loads without error",
+                        "Interception successful",
+                        "Modification visible"
+                    ]
+                }
+            },
+            "affected_components": [
+                "WebView settings",
+                "Content loading",
+                "SSL handling"
+            ],
+            "tags": [
+                "webview",
+                "mixed-content",
+                "mitm",
+                "ssl"
+            ]
+        },
+        {
+            "id": "WEBVIEW-005",
+            "name": "Universal XSS via Intent URL Handling",
+            "description": "WebView improperly handles intent:// URLs, allowing universal cross-site scripting attacks through malicious intent schemes.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Universal XSS, arbitrary code execution, and deep link manipulation",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "shouldOverrideUrlLoading[^{]*\\{[^}]*return\\s+false",
+                    "intent://[^\\s\"]+#Intent;",
+                    "setJavaScriptEnabled\\(true\\)[^;]*;[^;]*shouldOverrideUrlLoading",
+                    "WebViewClient\\([^{]*\\{[^}]*shouldOverrideUrlLoading"
+                ],
+                "method": "static",
+                "indicators": [
+                    "URL override handling",
+                    "Intent scheme processing",
+                    "JavaScript enabling",
+                    "WebViewClient implementation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Custom WebViewClient",
+                        "JavaScript enabled",
+                        "URL override method"
+                    ],
+                    "exclusion_patterns": [
+                        "validateIntentUrl",
+                        "sanitizeUrl",
+                        "checkScheme"
+                    ],
+                    "validation_steps": [
+                        "Check URL handling",
+                        "Verify intent processing",
+                        "Review JavaScript context",
+                        "Analyze scheme validation"
+                    ],
+                    "context_requirements": [
+                        "Intent URL handling",
+                        "WebView customization"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Craft malicious intent URL",
+                    "Inject JavaScript payload",
+                    "Trigger URL loading",
+                    "Execute XSS payload",
+                    "Access vulnerable context"
+                ],
+                "requirements": [
+                    "Intent URL knowledge",
+                    "JavaScript expertise",
+                    "XSS payload creation",
+                    "WebView understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Load intent URL",
+                        "Execute JavaScript",
+                        "Access vulnerable context"
+                    ],
+                    "expected_results": [
+                        "URL handling triggered",
+                        "JavaScript executed",
+                        "Context accessed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "WebViewClient",
+                "URL handling",
+                "JavaScript context"
+            ],
+            "tags": [
+                "webview",
+                "xss",
+                "intent",
+                "javascript"
+            ]
+        },
+        {
+            "id": "WEBVIEW-001",
+            "name": "Insecure WebView Implementation",
+            "description": "WebView is configured to allow file scheme access and JavaScript execution without proper origin validation, potentially allowing malicious JavaScript injection and local file access.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Remote code execution, local file access, and data theft",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "setAllowFileAccess\\(true\\)",
+                    "setAllowFileAccessFromFileURLs\\(true\\)",
+                    "setAllowUniversalAccessFromFileURLs\\(true\\)",
+                    "setJavaScriptEnabled\\(true\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "WebView configuration in Activity or Fragment",
+                    "JavaScript interface exposure",
+                    "File scheme handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "WebView class is used",
+                        "JavaScript is enabled",
+                        "File access is enabled"
+                    ],
+                    "exclusion_patterns": [
+                        "setAllowFileAccess\\(false\\)",
+                        "@JavascriptInterface with input validation"
+                    ],
+                    "validation_steps": [
+                        "Check if WebView loads remote content",
+                        "Verify JavaScript interface methods",
+                        "Analyze file scheme handling"
+                    ],
+                    "context_requirements": [
+                        "App uses WebView for content display",
+                        "JavaScript functionality is required"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify WebView usage in the app",
+                    "Check for JavaScript interface exposure",
+                    "Craft malicious HTML/JavaScript payload",
+                    "Exploit file scheme access if enabled",
+                    "Execute JavaScript to access exposed interfaces"
+                ],
+                "requirements": [
+                    "Access to WebView content",
+                    "Ability to inject JavaScript",
+                    "Knowledge of exposed interfaces"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Load local file via file:// scheme",
+                        "Execute JavaScript through exposed interface",
+                        "Access device filesystem through WebView"
+                    ],
+                    "expected_results": [
+                        "Successful file access",
+                        "JavaScript execution",
+                        "Interface method calls"
+                    ]
+                }
+            },
+            "affected_components": [
+                "WebView configurations",
+                "JavaScript interfaces",
+                "File system access"
+            ],
+            "tags": [
+                "webview",
+                "javascript",
+                "file-access",
+                "injection"
+            ]
+        },
+        {
+            "id": "WEBVIEW-002",
+            "name": "Unsafe JavaScript Interface",
+            "description": "WebView exposes sensitive Java methods to JavaScript without proper input validation or access controls.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Remote code execution and data exposure through JavaScript",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "@JavascriptInterface(?![\\s\\S]*?validate)",
+                    "addJavascriptInterface\\([^,]+,[^)]+\\)",
+                    "evaluateJavascript\\([^,]+,[^)]+\\)",
+                    "loadUrl\\(\"javascript:"
+                ],
+                "method": "static",
+                "indicators": [
+                    "JavaScript interface annotations",
+                    "Interface method exposure",
+                    "JavaScript execution",
+                    "Dynamic code loading"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "JavaScript interface usage",
+                        "Method exposure to JavaScript",
+                        "Dynamic JavaScript execution"
+                    ],
+                    "exclusion_patterns": [
+                        "validateInput\\(",
+                        "sanitizeJavaScript\\(",
+                        "secureInterface\\("
+                    ],
+                    "validation_steps": [
+                        "Check interface methods",
+                        "Analyze input validation",
+                        "Review exposed functionality"
+                    ],
+                    "context_requirements": [
+                        "App uses JavaScript bridges",
+                        "Native method exposure"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify exposed interfaces",
+                    "Analyze interface methods",
+                    "Craft malicious JavaScript",
+                    "Call exposed methods",
+                    "Exploit unvalidated input"
+                ],
+                "requirements": [
+                    "Access to WebView content",
+                    "JavaScript execution ability",
+                    "Interface documentation/analysis"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Call exposed methods",
+                        "Test input validation",
+                        "Execute arbitrary JavaScript"
+                    ],
+                    "expected_results": [
+                        "Method execution",
+                        "Input bypass",
+                        "Code execution"
+                    ]
+                }
+            },
+            "affected_components": [
+                "JavaScript interfaces",
+                "Native methods",
+                "Input validation"
+            ],
+            "tags": [
+                "webview",
+                "javascript",
+                "interface",
+                "injection"
+            ]
+        }
+    ]
+}

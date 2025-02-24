@@ -1,0 +1,307 @@
+{
+    "metadata": {
+        "category": "Biometric Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T10:42:00Z",
+        "description": "Biometric security vulnerabilities including fingerprint, face recognition, and biometric data handling"
+    },
+    "vulnerabilities": [
+        {
+            "id": "BIO-001",
+            "name": "Fingerprint Authentication State Manipulation",
+            "description": "Application manipulates fingerprint authentication state to bypass biometric verification.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Authentication bypass and unauthorized access",
+                "exploitability": "Hard"
+            },
+            "affects": {
+                "component": "android.hardware.biometrics",
+                "class": "BiometricPrompt",
+                "methods": [
+                    "authenticate",
+                    "onAuthenticationSucceeded"
+                ],
+                "hardware": [
+                    "fingerprint_sensor"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "BiometricPrompt\\.[^;]+",
+                    "authenticate\\([^)]+\\)",
+                    "onAuthenticationSucceeded"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Biometric usage",
+                    "Authentication handling",
+                    "State management"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Biometric implementation",
+                        "Authentication flow",
+                        "State handling"
+                    ],
+                    "exclusion_patterns": [
+                        "validateAuth",
+                        "checkBiometric",
+                        "verifyState"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze flow",
+                        "Review state",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Biometric implementation",
+                        "State management"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Hook BiometricPrompt",
+                    "Manipulate state",
+                    "Bypass auth",
+                    "Maintain access",
+                    "Hide manipulation"
+                ],
+                "requirements": [
+                    "Root access",
+                    "Hooking framework",
+                    "State knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Check auth",
+                        "Verify state",
+                        "Test bypass"
+                    ],
+                    "expected_results": [
+                        "State modified",
+                        "Auth bypassed",
+                        "Access gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Biometric system",
+                "Authentication manager",
+                "State handler"
+            ],
+            "tags": [
+                "biometric",
+                "fingerprint",
+                "authentication",
+                "state"
+            ]
+        },
+        {
+            "id": "BIO-002",
+            "name": "Face Recognition Spoofing",
+            "description": "Application's face recognition implementation can be bypassed using 2D or 3D spoofing techniques.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Authentication bypass and identity spoofing",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.hardware.biometrics",
+                "class": "FaceManager",
+                "methods": [
+                    "authenticate",
+                    "hasEnrolledTemplates"
+                ],
+                "hardware": [
+                    "face_sensor"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "FaceManager\\.[^;]+",
+                    "authenticate\\([^)]+\\)",
+                    "FACE_ACQUIRED"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Face recognition",
+                    "Liveness detection",
+                    "Authentication flow"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Face implementation",
+                        "Liveness checks",
+                        "Spoof detection"
+                    ],
+                    "exclusion_patterns": [
+                        "checkLiveness",
+                        "detectSpoof",
+                        "validateFace"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Test liveness",
+                        "Review detection",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Face recognition implementation",
+                        "Spoof detection"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Create spoof",
+                    "Bypass liveness",
+                    "Present fake",
+                    "Gain access",
+                    "Maintain session"
+                ],
+                "requirements": [
+                    "Face data",
+                    "Spoofing tools",
+                    "Authentication flow"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test spoof",
+                        "Check liveness",
+                        "Verify bypass"
+                    ],
+                    "expected_results": [
+                        "Spoof accepted",
+                        "Liveness bypassed",
+                        "Access gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Face recognition",
+                "Liveness detection",
+                "Authentication system"
+            ],
+            "tags": [
+                "biometric",
+                "face-recognition",
+                "spoofing",
+                "liveness"
+            ]
+        },
+        {
+            "id": "BIO-003",
+            "name": "Biometric Data Interception",
+            "description": "Application exposes biometric data during transmission between sensor and TEE.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Biometric data theft and template extraction",
+                "exploitability": "Hard"
+            },
+            "affects": {
+                "component": "android.hardware.biometrics",
+                "class": "BiometricManager",
+                "methods": [
+                    "authenticate",
+                    "processBiometricData"
+                ],
+                "hardware": [
+                    "biometric_sensors"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "BiometricManager\\.[^;]+",
+                    "processBiometricData\\([^)]+\\)",
+                    "TEE_communication"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Data transmission",
+                    "TEE communication",
+                    "Sensor handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Data handling",
+                        "TEE usage",
+                        "Sensor communication"
+                    ],
+                    "exclusion_patterns": [
+                        "encryptData",
+                        "secureTEE",
+                        "protectChannel"
+                    ],
+                    "validation_steps": [
+                        "Check transmission",
+                        "Analyze TEE",
+                        "Review protection",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "TEE implementation",
+                        "Data handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Hook sensor",
+                    "Intercept data",
+                    "Extract template",
+                    "Bypass TEE",
+                    "Capture biometrics"
+                ],
+                "requirements": [
+                    "Root access",
+                    "TEE knowledge",
+                    "Sensor access"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Check transmission",
+                        "Test interception",
+                        "Verify capture"
+                    ],
+                    "expected_results": [
+                        "Data intercepted",
+                        "Template extracted",
+                        "TEE bypassed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Biometric sensor",
+                "TEE communication",
+                "Data handler"
+            ],
+            "tags": [
+                "biometric",
+                "data-theft",
+                "tee",
+                "interception"
+            ]
+        }
+    ]
+}

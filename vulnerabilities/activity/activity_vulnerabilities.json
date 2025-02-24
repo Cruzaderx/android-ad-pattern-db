@@ -1,0 +1,497 @@
+{
+    "metadata": {
+        "category": "Activity Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T11:24:00Z",
+        "description": "Activity-related security vulnerabilities including task hijacking, state manipulation, and lifecycle exploitation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "ACT-001",
+            "name": "Task Affinity Hijacking",
+            "description": "Application's task affinity can be hijacked to enable phishing attacks or data theft through malicious activity stacks.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Phishing and data theft",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Activity",
+                "manifest": "AndroidManifest.xml",
+                "attributes": [
+                    "taskAffinity",
+                    "launchMode",
+                    "allowTaskReparenting"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "android:taskAffinity=\"[^\"]+\"",
+                    "android:allowTaskReparenting=\"true\"",
+                    "FLAG_ACTIVITY_NEW_TASK"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Task affinity",
+                    "Launch mode",
+                    "Task reparenting"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Activity implementation",
+                        "Task handling",
+                        "Affinity validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateAffinity",
+                        "checkTask",
+                        "verifyLaunch"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze affinity",
+                        "Review tasks",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Activity implementation",
+                        "Task handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Set affinity",
+                    "Create task",
+                    "Hijack stack",
+                    "Display overlay",
+                    "Capture data"
+                ],
+                "requirements": [
+                    "Activity access",
+                    "Task knowledge",
+                    "Affinity control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test affinity",
+                        "Check hijacking",
+                        "Verify overlay"
+                    ],
+                    "expected_results": [
+                        "Task hijacked",
+                        "Overlay displayed",
+                        "Data captured"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activity component",
+                "Task manager",
+                "Stack handler"
+            ],
+            "tags": [
+                "activity",
+                "task",
+                "affinity",
+                "hijacking"
+            ]
+        },
+        {
+            "id": "ACT-002",
+            "name": "Saved Instance State Manipulation",
+            "description": "Application's saved instance state can be manipulated to cause crashes or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Application crash and state manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Activity",
+                "methods": [
+                    "onSaveInstanceState",
+                    "onRestoreInstanceState",
+                    "onCreate"
+                ],
+                "state": "Bundle"
+            },
+            "detection": {
+                "pattern": [
+                    "onSaveInstanceState\\([^)]+\\)",
+                    "savedInstanceState\\.get[^(]+\\(",
+                    "Bundle\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "State saving",
+                    "State restoration",
+                    "Bundle handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Activity implementation",
+                        "State handling",
+                        "Bundle validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateState",
+                        "checkBundle",
+                        "verifyRestore"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze state",
+                        "Review bundles",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Activity implementation",
+                        "State handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify state",
+                    "Modify bundle",
+                    "Trigger restore",
+                    "Cause crash",
+                    "Execute operation"
+                ],
+                "requirements": [
+                    "Activity access",
+                    "Bundle knowledge",
+                    "State control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test state",
+                        "Check manipulation",
+                        "Verify crash"
+                    ],
+                    "expected_results": [
+                        "State modified",
+                        "Bundle corrupted",
+                        "App crashed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activity component",
+                "State handler",
+                "Bundle manager"
+            ],
+            "tags": [
+                "activity",
+                "state",
+                "bundle",
+                "manipulation"
+            ]
+        },
+        {
+            "id": "ACT-003",
+            "name": "Activity Result Injection",
+            "description": "Application's activity result handling can be exploited to inject malicious data or trigger unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Data injection and unauthorized operations",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Activity",
+                "methods": [
+                    "startActivityForResult",
+                    "onActivityResult",
+                    "setResult"
+                ],
+                "result": "Intent"
+            },
+            "detection": {
+                "pattern": [
+                    "startActivityForResult\\([^)]+\\)",
+                    "onActivityResult\\([^)]+\\)",
+                    "setResult\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Result handling",
+                    "Intent processing",
+                    "Data validation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Activity implementation",
+                        "Result handling",
+                        "Intent validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateResult",
+                        "checkIntent",
+                        "verifyData"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze results",
+                        "Review intents",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Activity implementation",
+                        "Result handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Intercept result",
+                    "Modify intent",
+                    "Inject data",
+                    "Trigger operation",
+                    "Extract information"
+                ],
+                "requirements": [
+                    "Activity access",
+                    "Intent knowledge",
+                    "Result control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test result",
+                        "Check injection",
+                        "Verify operation"
+                    ],
+                    "expected_results": [
+                        "Result injected",
+                        "Data modified",
+                        "Operation triggered"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activity component",
+                "Result handler",
+                "Intent processor"
+            ],
+            "tags": [
+                "activity",
+                "result",
+                "injection",
+                "intent"
+            ]
+        },
+        {
+            "id": "ACT-004",
+            "name": "Activity Lifecycle Manipulation",
+            "description": "Application's activity lifecycle can be manipulated to cause data leaks or execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Data leakage and unauthorized execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Activity",
+                "methods": [
+                    "onCreate",
+                    "onResume",
+                    "onPause",
+                    "onDestroy"
+                ],
+                "lifecycle": "activity"
+            },
+            "detection": {
+                "pattern": [
+                    "onCreate\\([^)]+\\)",
+                    "onResume\\([^)]+\\)",
+                    "onPause\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Lifecycle handling",
+                    "State management",
+                    "Data handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Activity implementation",
+                        "Lifecycle handling",
+                        "State validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateLifecycle",
+                        "checkState",
+                        "verifyData"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze lifecycle",
+                        "Review states",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Activity implementation",
+                        "Lifecycle handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify lifecycle",
+                    "Trigger transitions",
+                    "Extract data",
+                    "Execute operations",
+                    "Maintain state"
+                ],
+                "requirements": [
+                    "Activity access",
+                    "Lifecycle knowledge",
+                    "State control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test lifecycle",
+                        "Check manipulation",
+                        "Verify leakage"
+                    ],
+                    "expected_results": [
+                        "Lifecycle manipulated",
+                        "Data leaked",
+                        "Operations executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activity component",
+                "Lifecycle handler",
+                "State manager"
+            ],
+            "tags": [
+                "activity",
+                "lifecycle",
+                "manipulation",
+                "leakage"
+            ]
+        },
+        {
+            "id": "ACT-005",
+            "name": "Activity Launch Mode Abuse",
+            "description": "Application's activity launch modes can be abused to bypass security controls or manipulate task stacks.",
+            "severity": {
+                "level": "High",
+                "impact": "Security bypass and stack manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.Activity",
+                "manifest": "AndroidManifest.xml",
+                "attributes": [
+                    "launchMode",
+                    "singleTop",
+                    "singleTask",
+                    "singleInstance"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "android:launchMode=\"[^\"]+\"",
+                    "FLAG_ACTIVITY_[^\"]+",
+                    "startActivity\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Launch mode",
+                    "Flag usage",
+                    "Activity starting"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Activity implementation",
+                        "Launch handling",
+                        "Mode validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateLaunch",
+                        "checkMode",
+                        "verifyFlags"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze modes",
+                        "Review flags",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Activity implementation",
+                        "Launch handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify mode",
+                    "Set flags",
+                    "Launch activity",
+                    "Manipulate stack",
+                    "Bypass controls"
+                ],
+                "requirements": [
+                    "Activity access",
+                    "Mode knowledge",
+                    "Flag control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test launch",
+                        "Check bypass",
+                        "Verify stack"
+                    ],
+                    "expected_results": [
+                        "Mode abused",
+                        "Controls bypassed",
+                        "Stack manipulated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activity component",
+                "Launch handler",
+                "Stack manager"
+            ],
+            "tags": [
+                "activity",
+                "launch-mode",
+                "abuse",
+                "bypass"
+            ]
+        }
+    ]
+}

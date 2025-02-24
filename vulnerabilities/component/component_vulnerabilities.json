@@ -1,0 +1,456 @@
+{
+    "metadata": {
+        "category": "Component Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T05:42:00Z",
+        "description": "Android component-related security vulnerabilities including Activities, Services, Providers, and Receivers"
+    },
+    "vulnerabilities": [
+        {
+            "id": "COMP-003",
+            "name": "Service Hijacking via Pending Intent",
+            "description": "Application exposes mutable PendingIntents through services, allowing attackers to modify the underlying intent and hijack service operations.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Service manipulation, privilege escalation, and data theft",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "PendingIntent\\.getService\\([^,]+,\\s*0\\s*,",
+                    "FLAG_[^&]*MUTABLE[^&]*\\|",
+                    "createPendingResult\\([^,]+,\\s*[^,]+,\\s*0\\)",
+                    "PendingIntent\\.getBroadcast\\([^,]+,\\s*0\\s*,"
+                ],
+                "method": "static",
+                "indicators": [
+                    "PendingIntent creation",
+                    "Flag configuration",
+                    "Service communication",
+                    "Intent exposure"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service implementation",
+                        "PendingIntent usage",
+                        "Intent flags"
+                    ],
+                    "exclusion_patterns": [
+                        "FLAG_IMMUTABLE",
+                        "PendingIntent\\.FLAG_IMMUTABLE",
+                        "validatePendingIntent"
+                    ],
+                    "validation_steps": [
+                        "Check intent flags",
+                        "Analyze service usage",
+                        "Review intent handling",
+                        "Verify security flags"
+                    ],
+                    "context_requirements": [
+                        "Service component usage",
+                        "Inter-component communication"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify mutable PendingIntent",
+                    "Extract service communication",
+                    "Modify intent extras",
+                    "Trigger service operation",
+                    "Hijack service flow"
+                ],
+                "requirements": [
+                    "Access to PendingIntent",
+                    "Service analysis capability",
+                    "Intent manipulation tools"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Extract PendingIntent",
+                        "Modify intent data",
+                        "Trigger service"
+                    ],
+                    "expected_results": [
+                        "Intent modification success",
+                        "Service hijacked",
+                        "Operation altered"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service components",
+                "PendingIntents",
+                "Intent handling"
+            ],
+            "tags": [
+                "service",
+                "pending-intent",
+                "hijacking",
+                "privilege-escalation"
+            ]
+        },
+        {
+            "id": "COMP-004",
+            "name": "Dynamic Receiver Registration Vulnerability",
+            "description": "Application dynamically registers receivers without proper permission checks or intent validation, allowing unauthorized broadcasts and potential DOS attacks.",
+            "severity": {
+                "level": "High",
+                "impact": "Broadcast injection, DOS attacks, and component manipulation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "registerReceiver\\([^,]+,\\s*new IntentFilter\\(",
+                    "context\\.registerReceiver\\([^,]+,[^,]+\\)",
+                    "addAction\\([^)]+\\)[^.]*\\.registerReceiver",
+                    "IntentFilter\\([^)]*\\)[^.]*\\.registerReceiver"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Dynamic registration",
+                    "Receiver creation",
+                    "Intent filter setup",
+                    "Action handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Dynamic receiver usage",
+                        "Intent filter definition",
+                        "Broadcast handling"
+                    ],
+                    "exclusion_patterns": [
+                        "LocalBroadcastManager",
+                        "checkCallingPermission",
+                        "validateBroadcast"
+                    ],
+                    "validation_steps": [
+                        "Check registration context",
+                        "Analyze filter actions",
+                        "Review permissions",
+                        "Verify broadcast handling"
+                    ],
+                    "context_requirements": [
+                        "Broadcast receiver usage",
+                        "Dynamic registration"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify dynamic receiver",
+                    "Analyze intent filters",
+                    "Craft malicious broadcast",
+                    "Send unauthorized intent",
+                    "Trigger receiver"
+                ],
+                "requirements": [
+                    "Broadcast capability",
+                    "Intent filter knowledge",
+                    "Component analysis tools"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Send unauthorized broadcast",
+                        "Trigger receiver",
+                        "Monitor response"
+                    ],
+                    "expected_results": [
+                        "Broadcast accepted",
+                        "Receiver triggered",
+                        "No permission checks"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BroadcastReceivers",
+                "IntentFilters",
+                "Registration process"
+            ],
+            "tags": [
+                "receiver",
+                "broadcast",
+                "dynamic-registration",
+                "dos"
+            ]
+        },
+        {
+            "id": "COMP-005",
+            "name": "Fragment Injection in PreferenceActivity",
+            "description": "PreferenceActivity subclass allows loading of arbitrary fragments through intent extras, enabling code execution and preference manipulation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution, preference manipulation, and data exposure",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "extends\\s+PreferenceActivity",
+                    "isValidFragment\\([^{]*\\{[^}]*return\\s+true",
+                    "loadHeadersFromResource\\([^)]+\\)",
+                    "onBuildHeaders\\([^{]*\\{[^}]*loadHeadersFromResource"
+                ],
+                "method": "static",
+                "indicators": [
+                    "PreferenceActivity usage",
+                    "Fragment validation",
+                    "Header loading",
+                    "Fragment handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "PreferenceActivity subclass",
+                        "Fragment loading",
+                        "Header definition"
+                    ],
+                    "exclusion_patterns": [
+                        "isValidFragment.*return\\s+false",
+                        "validateFragmentClass",
+                        "allowedFragments"
+                    ],
+                    "validation_steps": [
+                        "Check fragment validation",
+                        "Analyze header loading",
+                        "Review class handling",
+                        "Verify security checks"
+                    ],
+                    "context_requirements": [
+                        "Preference management",
+                        "Fragment usage"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify vulnerable activity",
+                    "Create malicious fragment",
+                    "Craft intent extras",
+                    "Launch activity",
+                    "Inject fragment"
+                ],
+                "requirements": [
+                    "PreferenceActivity knowledge",
+                    "Fragment creation ability",
+                    "Intent crafting tools"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Load custom fragment",
+                        "Inject malicious class",
+                        "Access preferences"
+                    ],
+                    "expected_results": [
+                        "Fragment loaded",
+                        "Code executed",
+                        "Preferences accessed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "PreferenceActivity",
+                "Fragments",
+                "Intent handling"
+            ],
+            "tags": [
+                "fragment-injection",
+                "preferences",
+                "code-execution",
+                "activity"
+            ]
+        },
+        {
+            "id": "COMP-001",
+            "name": "Exported Activity Without Permission",
+            "description": "Activity component is exported without proper permission protection, allowing any external application to launch it and potentially access sensitive functionality or data.",
+            "severity": {
+                "level": "High",
+                "impact": "Unauthorized access to app components and data exposure",
+                "exploitability": "Easy"
+            },
+            "detection": {
+                "pattern": [
+                    "android:exported=\"true\"",
+                    "<activity[^>]*>(?!.*android:permission)",
+                    "CATEGORY_LAUNCHER",
+                    "CATEGORY_DEFAULT"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Manifest activity declaration",
+                    "Intent filter presence",
+                    "Missing permission attribute"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Activity is exported",
+                        "No permission protection",
+                        "Not a main launcher activity"
+                    ],
+                    "exclusion_patterns": [
+                        "android:permission=\".*\"",
+                        "Main launcher activity",
+                        "Login/Authentication activities"
+                    ],
+                    "validation_steps": [
+                        "Check activity purpose",
+                        "Verify intent filters",
+                        "Analyze activity protection"
+                    ],
+                    "context_requirements": [
+                        "Activity exists in manifest",
+                        "Activity is not system component"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 95,
+                    "dynamic_analysis": 80,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Easy",
+                "steps": [
+                    "Identify exported activity",
+                    "Create intent to launch activity",
+                    "Send intent without permissions",
+                    "Access activity functionality"
+                ],
+                "requirements": [
+                    "Android device/emulator",
+                    "Target app installed",
+                    "ADB access for testing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Launch activity from external app",
+                        "Access activity without permissions",
+                        "Attempt data extraction"
+                    ],
+                    "expected_results": [
+                        "Activity launches successfully",
+                        "No permission checks",
+                        "Access to functionality"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Android manifest",
+                "Activity components",
+                "Intent filters"
+            ],
+            "tags": [
+                "activity",
+                "exported",
+                "permission",
+                "manifest"
+            ]
+        },
+        {
+            "id": "COMP-002",
+            "name": "Unprotected Content Provider",
+            "description": "Content Provider is exposed without proper permissions or path restrictions, allowing unauthorized access to app data.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Data theft, unauthorized modification, and privacy breach",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "<provider[^>]*android:exported=\"true\"[^>]*>",
+                    "android:grantUriPermissions=\"true\"",
+                    "<provider[^>]*>(?!.*android:permission)",
+                    "<path-permission[^>]*>"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Provider declaration",
+                    "URI permissions",
+                    "Path permissions",
+                    "Authority definition"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Provider is exported",
+                        "No permission protection",
+                        "Data access methods"
+                    ],
+                    "exclusion_patterns": [
+                        "android:permission=\".*\"",
+                        "android:readPermission=\".*\"",
+                        "android:writePermission=\".*\""
+                    ],
+                    "validation_steps": [
+                        "Check provider permissions",
+                        "Analyze URI patterns",
+                        "Review path restrictions"
+                    ],
+                    "context_requirements": [
+                        "App declares content provider",
+                        "Provider exposes data"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify provider authority",
+                    "Enumerate available URIs",
+                    "Query exposed data",
+                    "Modify content values",
+                    "Access sensitive information"
+                ],
+                "requirements": [
+                    "Android device",
+                    "Content provider URI",
+                    "Query capabilities"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Query provider data",
+                        "Insert test records",
+                        "Update existing data"
+                    ],
+                    "expected_results": [
+                        "Data access success",
+                        "Modification allowed",
+                        "No permission errors"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Content providers",
+                "Data access",
+                "URI permissions"
+            ],
+            "tags": [
+                "provider",
+                "content",
+                "data-access",
+                "permissions"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,281 @@
+{
+    "metadata": {
+        "category": "Permission Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T07:12:00Z",
+        "description": "Permission-related security vulnerabilities in Android applications including permission bypass, escalation, and misuse"
+    },
+    "vulnerabilities": [
+        {
+            "id": "PERM-001",
+            "name": "Permission Bypass via Component Exposure",
+            "description": "Application exposes privileged functionality through unprotected components, allowing permission bypass through indirect access.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Permission bypass, privilege escalation, and unauthorized access",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "exported=\"true\"[^>]*>(?!.*android:permission)",
+                    "CATEGORY_DEFAULT.*CATEGORY_BROWSABLE",
+                    "<provider[^>]*android:exported=\"true\"",
+                    "<service[^>]*android:exported=\"true\""
+                ],
+                "method": "static",
+                "indicators": [
+                    "Component export",
+                    "Permission declaration",
+                    "Intent filters",
+                    "Component access"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Exported components",
+                        "Permission usage",
+                        "Component protection"
+                    ],
+                    "exclusion_patterns": [
+                        "android:permission=",
+                        "android:protectionLevel",
+                        "checkPermission"
+                    ],
+                    "validation_steps": [
+                        "Check export flags",
+                        "Analyze permissions",
+                        "Review protection",
+                        "Verify access control"
+                    ],
+                    "context_requirements": [
+                        "Component declaration",
+                        "Permission model"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 95,
+                    "dynamic_analysis": 85,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify exposed component",
+                    "Analyze functionality",
+                    "Create exploit app",
+                    "Access component",
+                    "Bypass permissions"
+                ],
+                "requirements": [
+                    "Android development",
+                    "Component knowledge",
+                    "IPC understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Access component",
+                        "Execute function",
+                        "Check permissions"
+                    ],
+                    "expected_results": [
+                        "Component accessed",
+                        "Function executed",
+                        "Permissions bypassed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activities",
+                "Services",
+                "Providers",
+                "Receivers"
+            ],
+            "tags": [
+                "permissions",
+                "components",
+                "bypass",
+                "exposure"
+            ]
+        },
+        {
+            "id": "PERM-002",
+            "name": "Permission Escalation via Intent",
+            "description": "Application forwards privileged intents without proper permission checks, enabling privilege escalation through intent manipulation.",
+            "severity": {
+                "level": "High",
+                "impact": "Privilege escalation, unauthorized access, and permission bypass",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "startActivity\\([^)]+\\)[^;]*;\\s*//[^\\n]*privileged",
+                    "sendBroadcast\\([^)]+\\)[^;]*;\\s*//[^\\n]*system",
+                    "startService\\([^)]+\\)[^;]*;\\s*//[^\\n]*protected",
+                    "(?<!check)Permission[^;]*;\\s*startActivity"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Intent forwarding",
+                    "Permission checks",
+                    "Component launch",
+                    "Intent handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Intent usage",
+                        "Permission handling",
+                        "Component launching"
+                    ],
+                    "exclusion_patterns": [
+                        "checkCallingPermission",
+                        "enforcePermission",
+                        "validateIntent"
+                    ],
+                    "validation_steps": [
+                        "Check intent handling",
+                        "Analyze permissions",
+                        "Review forwarding",
+                        "Verify checks"
+                    ],
+                    "context_requirements": [
+                        "Intent processing",
+                        "Permission model"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify intent handling",
+                    "Analyze permissions",
+                    "Craft malicious intent",
+                    "Trigger forwarding",
+                    "Escalate privileges"
+                ],
+                "requirements": [
+                    "Intent manipulation",
+                    "Permission knowledge",
+                    "Component understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Send intent",
+                        "Check forwarding",
+                        "Verify escalation"
+                    ],
+                    "expected_results": [
+                        "Intent forwarded",
+                        "Permission gained",
+                        "Access elevated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Intent handling",
+                "Permission checks",
+                "Component launching"
+            ],
+            "tags": [
+                "permissions",
+                "intent",
+                "escalation",
+                "forwarding"
+            ]
+        },
+        {
+            "id": "PERM-003",
+            "name": "Dynamic Permission Manipulation",
+            "description": "Application allows dynamic modification of permissions at runtime without proper validation, enabling unauthorized permission changes.",
+            "severity": {
+                "level": "High",
+                "impact": "Permission modification, security bypass, and privilege escalation",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "grantPermission\\([^)]+\\)",
+                    "revokePermission\\([^)]+\\)",
+                    "setPermission\\([^)]+\\)",
+                    "modifyPermission\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Permission modification",
+                    "Runtime changes",
+                    "Permission management",
+                    "Security controls"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Permission management",
+                        "Runtime modification",
+                        "Security validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePermissionChange",
+                        "securePermissionUpdate",
+                        "checkModification"
+                    ],
+                    "validation_steps": [
+                        "Check modifications",
+                        "Analyze validation",
+                        "Review controls",
+                        "Verify integrity"
+                    ],
+                    "context_requirements": [
+                        "Permission handling",
+                        "Runtime changes"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify modification point",
+                    "Analyze validation",
+                    "Craft payload",
+                    "Trigger changes",
+                    "Modify permissions"
+                ],
+                "requirements": [
+                    "Permission knowledge",
+                    "Runtime manipulation",
+                    "System understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Modify permission",
+                        "Check validation",
+                        "Verify changes"
+                    ],
+                    "expected_results": [
+                        "Changes applied",
+                        "Validation bypassed",
+                        "Permissions modified"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Permission system",
+                "Runtime security",
+                "Access control"
+            ],
+            "tags": [
+                "permissions",
+                "runtime",
+                "modification",
+                "security-controls"
+            ]
+        }
+    ]
+}

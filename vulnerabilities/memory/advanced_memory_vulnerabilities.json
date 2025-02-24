@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Memory Corruption",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T09:30:00Z",
+        "description": "Advanced memory corruption vulnerabilities in Android applications including buffer overflows, use-after-free, and type confusion exploits"
+    },
+    "vulnerabilities": [
+        {
+            "id": "MEM-004",
+            "name": "JNI Array Overflow",
+            "description": "Application performs unsafe JNI array operations without bounds checking, enabling buffer overflow and memory corruption.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Memory corruption, code execution, and system compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "GetArrayElements\\([^)]+\\)",
+                    "(?<!check)ArrayRegion[A-Z][a-zA-Z]*\\.[^;]+",
+                    "memcpy\\([^)]+\\)",
+                    "GetPrimitiveArrayCritical\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "JNI operations",
+                    "Array handling",
+                    "Memory copying",
+                    "Bounds checking"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "JNI usage",
+                        "Array handling",
+                        "Memory operations"
+                    ],
+                    "exclusion_patterns": [
+                        "checkBounds",
+                        "validateSize",
+                        "secureArray"
+                    ],
+                    "validation_steps": [
+                        "Check arrays",
+                        "Analyze copying",
+                        "Review bounds",
+                        "Verify safety"
+                    ],
+                    "context_requirements": [
+                        "JNI implementation",
+                        "Array handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify array",
+                    "Craft payload",
+                    "Trigger overflow",
+                    "Corrupt memory",
+                    "Execute code"
+                ],
+                "requirements": [
+                    "JNI knowledge",
+                    "Memory layout",
+                    "Payload crafting"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Create array",
+                        "Trigger copy",
+                        "Check overflow"
+                    ],
+                    "expected_results": [
+                        "Buffer overflowed",
+                        "Memory corrupted",
+                        "Code executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "JNI system",
+                "Array handler",
+                "Memory manager"
+            ],
+            "tags": [
+                "memory",
+                "overflow",
+                "jni",
+                "buffer"
+            ]
+        },
+        {
+            "id": "MEM-005",
+            "name": "Native Heap Use-After-Free",
+            "description": "Application accesses freed native heap memory without validation, enabling use-after-free exploitation and memory corruption.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Memory corruption, code execution, and data manipulation",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "free\\([^)]+\\)",
+                    "(?<!validate)Pointer[A-Z][a-zA-Z]*\\.[^;]+",
+                    "delete\\s+[^;]+",
+                    "malloc\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Memory allocation",
+                    "Pointer handling",
+                    "Memory freeing",
+                    "Access validation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Native allocation",
+                        "Memory freeing",
+                        "Pointer usage"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePointer",
+                        "checkAccess",
+                        "secureMemory"
+                    ],
+                    "validation_steps": [
+                        "Check allocation",
+                        "Analyze freeing",
+                        "Review access",
+                        "Verify safety"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Memory handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Allocate memory",
+                    "Free pointer",
+                    "Maintain reference",
+                    "Reallocate chunk",
+                    "Access memory"
+                ],
+                "requirements": [
+                    "Heap knowledge",
+                    "Memory management",
+                    "Pointer control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Free memory",
+                        "Access pointer",
+                        "Check corruption"
+                    ],
+                    "expected_results": [
+                        "Memory freed",
+                        "Access triggered",
+                        "Heap corrupted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Native heap",
+                "Memory manager",
+                "Pointer handler"
+            ],
+            "tags": [
+                "memory",
+                "use-after-free",
+                "native",
+                "heap"
+            ]
+        },
+        {
+            "id": "MEM-006",
+            "name": "Type Confusion Exploitation",
+            "description": "Application performs unsafe type casting in native code without validation, enabling type confusion and memory corruption.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Memory corruption, code execution, and object manipulation",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "reinterpret_cast<[^>]+>",
+                    "(?<!check)Cast[A-Z][a-zA-Z]*\\.[^;]+",
+                    "static_cast<[^>]+>",
+                    "dynamic_cast<[^>]+>"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Type casting",
+                    "Object handling",
+                    "Memory access",
+                    "Type validation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Type casting",
+                        "Object handling",
+                        "Memory access"
+                    ],
+                    "exclusion_patterns": [
+                        "validateType",
+                        "checkCast",
+                        "secureObject"
+                    ],
+                    "validation_steps": [
+                        "Check casting",
+                        "Analyze types",
+                        "Review access",
+                        "Verify safety"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Type handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Create object",
+                    "Force casting",
+                    "Manipulate memory",
+                    "Access object",
+                    "Corrupt data"
+                ],
+                "requirements": [
+                    "Type knowledge",
+                    "Object layout",
+                    "Memory control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Cast object",
+                        "Access memory",
+                        "Check confusion"
+                    ],
+                    "expected_results": [
+                        "Type confused",
+                        "Memory accessed",
+                        "Object corrupted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Type system",
+                "Object handler",
+                "Memory manager"
+            ],
+            "tags": [
+                "memory",
+                "type-confusion",
+                "native",
+                "casting"
+            ]
+        }
+    ]
+}

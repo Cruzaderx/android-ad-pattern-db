@@ -1,139 +1,139 @@
-# Android Ad Pattern Database
+# Android Vulnerability Database
 
-A comprehensive, community-driven database of Android advertising SDK patterns for ad detection and removal. This database contains patterns for identifying and handling various ad components across different ad networks and SDKs.
+A comprehensive database of Android application vulnerabilities organized by categories, designed for security scanning and analysis.
 
-## Overview
+## Structure
 
-This pattern database is designed to:
-- Identify ad-related components in Android applications
-- Support universal ad detection across different APKs
-- Learn and adapt from successful ad removals
-- Enable community contributions for pattern updates
+The database is organized into category-specific JSON files:
 
-## Database Structure
+```
+android-ad-pattern-db/
+├── vulnerability_index.json           # Index of all categories and schema
+└── vulnerabilities/
+    ├── webview/                      # WebView security issues
+    ├── component/                    # Component exposure vulnerabilities
+    ├── bluetooth/                    # BLE/Bluetooth vulnerabilities
+    ├── nfc/                         # NFC-related vulnerabilities
+    ├── storage/                     # Data storage vulnerabilities
+    ├── anti_detection/              # Root/Emulator detection bypass
+    └── runtime/                     # Runtime manipulation issues
+```
 
-The database (`database.json`) is organized into three main sections:
+## Vulnerability Schema
 
-### 1. Ad SDKs
-Contains patterns for major advertising SDKs including:
-- Facebook Ads
-- Google AdMob
-- Unity Ads
-- AppLovin
-- IronSource
-- ByteDance/Pangle
-- Yandex Ads
-- MoPub
-- InMobi
-- And more...
+Each vulnerability entry follows this structure:
 
-Each SDK entry includes:
 ```json
 {
-    "identifier": "com.example.ads",
-    "components": {
-        "activities": ["list of activity classes"],
-        "services": ["list of service classes"],
-        "providers": ["list of provider classes"],
-        "receivers": ["list of receiver classes"],
-        "permissions": ["list of permissions"]
+    "id": "CATEGORY-XXX",
+    "name": "Vulnerability Name",
+    "description": "Detailed description",
+    "severity": {
+        "level": "Critical/High/Medium/Low",
+        "impact": "Impact description",
+        "exploitability": "Easy/Medium/Hard"
     },
-    "resources": {
-        "layouts": ["ad layout names"],
-        "drawables": ["ad drawable resources"],
-        "strings": ["ad-related strings"]
+    "detection": {
+        "pattern": ["regex patterns"],
+        "method": "static/dynamic",
+        "indicators": ["what to look for"],
+        "accuracy_improvements": {
+            "required_conditions": ["conditions"],
+            "exclusion_patterns": ["patterns"],
+            "validation_steps": ["steps"],
+            "context_requirements": ["requirements"]
+        },
+        "confidence_score": {
+            "static_analysis": 0-100,
+            "dynamic_analysis": 0-100,
+            "manual_review": 0-100
+        }
     },
-    "code_patterns": {
-        "initialization": ["SDK init patterns"],
-        "loading": ["ad loading patterns"],
-        "callbacks": ["callback patterns"]
-    }
+    "exploit": {
+        "difficulty": "Easy/Medium/Hard",
+        "steps": ["exploitation steps"],
+        "requirements": ["needed tools/access"],
+        "verification": {
+            "test_cases": ["test cases"],
+            "expected_results": ["results"]
+        }
+    },
+    "affected_components": ["components"],
+    "tags": ["relevant", "tags"]
 }
 ```
 
-### 2. Learned Patterns
-Contains dynamically learned patterns from successful ad removals:
-```json
-{
-    "activities": {
-        "pattern": "regex pattern",
-        "confidence": 0.85,
-        "matches": ["discovered matches"]
-    }
-}
-```
+## Categories
 
-### 3. Statistics
-Tracks pattern effectiveness and usage:
-```json
-{
-    "total_apks_processed": 1000,
-    "successful_removals": 950,
-    "pattern_matches": {
-        "facebook": 156,
-        "admob": 203
-    }
-}
-```
+1. **WebView Security**
+   - Insecure WebView configurations
+   - JavaScript interface vulnerabilities
 
-## Usage
+2. **Component Security**
+   - Exported component issues
+   - Content provider vulnerabilities
 
-### Integration
-```python
-from db_manager import PatternDatabase, PatternLearner
+3. **Bluetooth Security**
+   - BLE authentication issues
+   - MITM vulnerabilities
 
-# Initialize database
-pattern_db = PatternDatabase()
+4. **NFC Security**
+   - Tag cloning vulnerabilities
+   - Relay attack issues
 
-# Get patterns for specific SDK
-facebook_patterns = pattern_db.get_sdk_patterns("facebook")
+5. **Storage Security**
+   - File permission issues
+   - External storage vulnerabilities
 
-# Get all learned patterns
-learned_patterns = pattern_db.get_learned_patterns()
+6. **Anti-Detection Security**
+   - Root detection bypass
+   - Emulator detection evasion
 
-# Learn from successful removal
-pattern_learner = PatternLearner(pattern_db)
-pattern_learner.learn_from_removal(manifest_path, smali_dir, success_rate)
-```
+7. **Runtime Security**
+   - Dynamic code loading issues
+   - Reflection abuse
 
-### Contributing Patterns
+## Detection Patterns
 
-1. Fork the repository
-2. Add new patterns or update existing ones
-3. Submit a pull request with:
-   - Description of new/updated patterns
-   - Source APKs used for pattern verification
-   - Success rate of pattern matches
+Each vulnerability includes regex patterns designed for static code analysis:
 
-## Pattern Quality Guidelines
+- **Pattern Types**:
+  - Code patterns (Java/Kotlin)
+  - XML patterns (AndroidManifest.xml)
+  - Resource patterns (strings.xml, layout files)
 
-Patterns should be:
-1. Accurate - Minimize false positives
-2. Universal - Work across different APK versions
-3. Resilient - Handle code obfuscation
-4. Documented - Include source and verification info
+- **Accuracy Improvements**:
+  - Required conditions for vulnerability
+  - Exclusion patterns to reduce false positives
+  - Validation steps for confirmation
+  - Context requirements
 
-## Community Updates
+## Usage for Vulnerability Scanner
 
-The database is continuously updated through:
-1. Automated pattern learning
-2. Community contributions
-3. Regular SDK updates
-4. Success rate tracking
+1. Parse the vulnerability_index.json to get all categories
+2. For each category:
+   - Load the corresponding JSON file
+   - Extract detection patterns
+   - Apply patterns to target code
+   - Use accuracy improvements to filter results
+   - Score findings based on confidence levels
 
-## License
+## False Positive Reduction
 
-This database is provided under the MIT License. See LICENSE file for details.
+The database includes multiple layers of validation:
 
-## Description
+1. **Required Conditions**: Must be present for vulnerability
+2. **Exclusion Patterns**: Indicate secure implementations
+3. **Validation Steps**: Additional checks to confirm
+4. **Context Requirements**: Application context needed
+5. **Confidence Scoring**: Multi-dimensional scoring system
 
-The Android Ad Pattern Database is a comprehensive collection of patterns used to identify and handle advertising components in Android applications. It serves as a central repository for the Android modding community, providing reliable patterns for ad detection and removal across various advertising networks and SDKs.
+## Confidence Scoring
 
-Key Features:
-- Extensive coverage of major ad networks
-- Machine learning-enhanced pattern detection
-- Community-driven updates and improvements
-- Success rate tracking and validation
-- Universal compatibility across different APKs
+Each vulnerability includes confidence scores for:
 
-This database is maintained by the community and continuously improved through automated pattern learning and user contributions. It aims to provide reliable, up-to-date patterns while maintaining application stability during ad removal operations.
+- **Static Analysis**: Pattern-based detection
+- **Dynamic Analysis**: Runtime verification
+- **Manual Review**: Human analysis required
+
+Scores range from 0-100, indicating detection reliability.

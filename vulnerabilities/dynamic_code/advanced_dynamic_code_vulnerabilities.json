@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Dynamic Code",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T09:38:00Z",
+        "description": "Advanced dynamic code vulnerabilities in Android applications including class loading, reflection abuse, and runtime modification"
+    },
+    "vulnerabilities": [
+        {
+            "id": "DYN-004",
+            "name": "Dynamic Class Loading Injection",
+            "description": "Application loads classes dynamically without proper validation, enabling code injection and arbitrary execution.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution, system compromise, and security bypass",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "DexClassLoader\\([^)]+\\)",
+                    "(?<!validate)ClassLoader[A-Z][a-zA-Z]*\\.[^;]+",
+                    "loadClass\\([^)]+\\)",
+                    "PathClassLoader\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Class loading",
+                    "Dynamic loading",
+                    "Code execution",
+                    "Path handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Dynamic loading",
+                        "Code validation",
+                        "Path handling"
+                    ],
+                    "exclusion_patterns": [
+                        "validateClass",
+                        "secureLoader",
+                        "checkCode"
+                    ],
+                    "validation_steps": [
+                        "Check loading",
+                        "Analyze paths",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Loader implementation",
+                        "Code validation"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Create payload",
+                    "Package code",
+                    "Inject path",
+                    "Trigger loading",
+                    "Execute code"
+                ],
+                "requirements": [
+                    "Code creation",
+                    "Path control",
+                    "Loading trigger"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Create code",
+                        "Load class",
+                        "Execute payload"
+                    ],
+                    "expected_results": [
+                        "Code loaded",
+                        "Class injected",
+                        "Payload executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Class loader",
+                "Code execution",
+                "Security controls"
+            ],
+            "tags": [
+                "dynamic-code",
+                "class-loading",
+                "injection",
+                "execution"
+            ]
+        },
+        {
+            "id": "DYN-005",
+            "name": "Reflection Method Bypass",
+            "description": "Application uses reflection without proper access controls, enabling unauthorized method access and security bypass.",
+            "severity": {
+                "level": "High",
+                "impact": "Method access, security bypass, and privilege escalation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Class\\.forName\\([^)]+\\)",
+                    "(?<!secure)Method[A-Z][a-zA-Z]*\\.[^;]+",
+                    "invoke\\([^)]+\\)",
+                    "getDeclaredMethod\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Reflection usage",
+                    "Method access",
+                    "Invocation handling",
+                    "Class loading"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Reflection usage",
+                        "Method handling",
+                        "Access control"
+                    ],
+                    "exclusion_patterns": [
+                        "validateMethod",
+                        "secureInvoke",
+                        "checkAccess"
+                    ],
+                    "validation_steps": [
+                        "Check reflection",
+                        "Analyze methods",
+                        "Review access",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Reflection implementation",
+                        "Access control"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify methods",
+                    "Create reflection",
+                    "Bypass controls",
+                    "Access method",
+                    "Execute code"
+                ],
+                "requirements": [
+                    "Reflection knowledge",
+                    "Method analysis",
+                    "Access control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Find method",
+                        "Use reflection",
+                        "Execute code"
+                    ],
+                    "expected_results": [
+                        "Method found",
+                        "Access gained",
+                        "Code executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Reflection system",
+                "Method handler",
+                "Access control"
+            ],
+            "tags": [
+                "dynamic-code",
+                "reflection",
+                "bypass",
+                "method-access"
+            ]
+        },
+        {
+            "id": "DYN-006",
+            "name": "Runtime Code Modification",
+            "description": "Application modifies code at runtime without proper validation, enabling code injection and execution flow manipulation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code manipulation, execution flow control, and system compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "redefineClasses\\([^)]+\\)",
+                    "(?<!validate)Instrumentation[A-Z][a-zA-Z]*\\.[^;]+",
+                    "retransformClasses\\([^)]+\\)",
+                    "addTransformer\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Code modification",
+                    "Class redefinition",
+                    "Transformation",
+                    "Runtime changes"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Runtime modification",
+                        "Code validation",
+                        "Change control"
+                    ],
+                    "exclusion_patterns": [
+                        "validateModification",
+                        "secureTransform",
+                        "checkChanges"
+                    ],
+                    "validation_steps": [
+                        "Check modifications",
+                        "Analyze changes",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Runtime implementation",
+                        "Code modification"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Create modification",
+                    "Inject changes",
+                    "Transform code",
+                    "Manipulate flow",
+                    "Execute payload"
+                ],
+                "requirements": [
+                    "Runtime access",
+                    "Code modification",
+                    "Flow control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Modify code",
+                        "Transform class",
+                        "Execute changes"
+                    ],
+                    "expected_results": [
+                        "Code modified",
+                        "Flow changed",
+                        "Payload executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Runtime system",
+                "Code modifier",
+                "Security controls"
+            ],
+            "tags": [
+                "dynamic-code",
+                "runtime",
+                "modification",
+                "transformation"
+            ]
+        }
+    ]
+}

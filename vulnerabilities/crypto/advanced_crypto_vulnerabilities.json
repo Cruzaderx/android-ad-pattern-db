@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Crypto Implementation",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:25:00Z",
+        "description": "Advanced cryptographic vulnerabilities in Android applications including weak implementations, side-channel attacks, and key management issues"
+    },
+    "vulnerabilities": [
+        {
+            "id": "CRYPTO-004",
+            "name": "Weak Random Number Generation",
+            "description": "Application uses predictable or weak random number generation for cryptographic operations, enabling cryptographic attacks.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Cryptographic bypass, key prediction, and security compromise",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Random\\([^)]*\\)",
+                    "Math\\.random\\(\\)",
+                    "(?<!Secure)Random[A-Z][a-zA-Z]*",
+                    "new Random\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Random generation",
+                    "PRNG usage",
+                    "Seed handling",
+                    "Random operations"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Random usage",
+                        "Seed management",
+                        "Crypto context"
+                    ],
+                    "exclusion_patterns": [
+                        "SecureRandom",
+                        "validateEntropy",
+                        "checkRandomness"
+                    ],
+                    "validation_steps": [
+                        "Check generation",
+                        "Analyze entropy",
+                        "Review seeding",
+                        "Verify strength"
+                    ],
+                    "context_requirements": [
+                        "Crypto implementation",
+                        "Random generation"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify PRNG",
+                    "Analyze implementation",
+                    "Predict values",
+                    "Break crypto",
+                    "Extract secrets"
+                ],
+                "requirements": [
+                    "PRNG knowledge",
+                    "Crypto analysis",
+                    "Pattern recognition"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Monitor output",
+                        "Analyze patterns",
+                        "Predict values"
+                    ],
+                    "expected_results": [
+                        "Pattern found",
+                        "Values predicted",
+                        "Crypto broken"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Random generator",
+                "Crypto system",
+                "Key generation"
+            ],
+            "tags": [
+                "crypto",
+                "random",
+                "prng",
+                "key-generation"
+            ]
+        },
+        {
+            "id": "CRYPTO-005",
+            "name": "Timing Attack Vector",
+            "description": "Application's cryptographic operations exhibit timing variations that leak information about secret values.",
+            "severity": {
+                "level": "High",
+                "impact": "Secret disclosure, key extraction, and cryptographic bypass",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "Arrays\\.equals\\([^)]+\\)",
+                    "String\\.equals\\([^)]+\\)",
+                    "(?<!constant)Time[A-Z][a-zA-Z]*Compare",
+                    "MessageDigest\\.isEqual\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Comparison operations",
+                    "Timing variations",
+                    "Secret handling",
+                    "Equality checks"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Secret comparison",
+                        "Timing sensitivity",
+                        "Crypto operations"
+                    ],
+                    "exclusion_patterns": [
+                        "constantTimeEquals",
+                        "secureCompare",
+                        "timingSafe"
+                    ],
+                    "validation_steps": [
+                        "Check comparisons",
+                        "Analyze timing",
+                        "Review operations",
+                        "Verify safety"
+                    ],
+                    "context_requirements": [
+                        "Crypto implementation",
+                        "Timing analysis"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify operation",
+                    "Measure timing",
+                    "Collect samples",
+                    "Analyze variations",
+                    "Extract secrets"
+                ],
+                "requirements": [
+                    "Timing measurement",
+                    "Statistical analysis",
+                    "Crypto knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Time operations",
+                        "Collect data",
+                        "Analyze patterns"
+                    ],
+                    "expected_results": [
+                        "Timing leaked",
+                        "Pattern found",
+                        "Secret extracted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Crypto operations",
+                "Secret handling",
+                "Comparison logic"
+            ],
+            "tags": [
+                "crypto",
+                "timing-attack",
+                "side-channel",
+                "secret-comparison"
+            ]
+        },
+        {
+            "id": "CRYPTO-006",
+            "name": "Key Storage Vulnerability",
+            "description": "Application stores cryptographic keys insecurely, enabling unauthorized access and key extraction.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Key compromise, data decryption, and security breach",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "getSharedPreferences\\([^)]+\\)",
+                    "putString\\([^)]+\\)",
+                    "(?<!secure)KeyStore\\.[^;]+",
+                    "FileOutputStream\\([^)]+\\.key"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Key storage",
+                    "Preferences usage",
+                    "File operations",
+                    "KeyStore handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Key handling",
+                        "Storage usage",
+                        "Security context"
+                    ],
+                    "exclusion_patterns": [
+                        "AndroidKeyStore",
+                        "secureStorage",
+                        "protectKey"
+                    ],
+                    "validation_steps": [
+                        "Check storage",
+                        "Analyze protection",
+                        "Review access",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Key management",
+                        "Storage security"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Locate storage",
+                    "Access keys",
+                    "Extract data",
+                    "Decrypt content",
+                    "Compromise system"
+                ],
+                "requirements": [
+                    "Storage access",
+                    "Key extraction",
+                    "Crypto knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Find keys",
+                        "Extract data",
+                        "Test decryption"
+                    ],
+                    "expected_results": [
+                        "Keys accessed",
+                        "Data extracted",
+                        "Content decrypted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Key storage",
+                "Security system",
+                "Data protection"
+            ],
+            "tags": [
+                "crypto",
+                "key-storage",
+                "data-protection",
+                "security"
+            ]
+        }
+    ]
+}

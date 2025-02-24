@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Permission Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:30:00Z",
+        "description": "Advanced permission-related security vulnerabilities in Android applications including escalation chains, bypass techniques, and runtime manipulation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "PERM-004",
+            "name": "Permission Escalation Chain",
+            "description": "Application contains multiple vulnerabilities that can be chained together to escalate permissions and gain unauthorized access.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Permission escalation, privilege elevation, and system compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "checkSelfPermission\\([^)]+\\)",
+                    "grantUriPermission\\([^)]+\\)",
+                    "(?<!check)Permission[A-Z][a-zA-Z]*\\.[^;]+",
+                    "requestPermissions\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Permission checks",
+                    "Grant operations",
+                    "Permission handling",
+                    "Access control"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Permission usage",
+                        "Grant handling",
+                        "Access control"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePermission",
+                        "checkAccess",
+                        "secureGrant"
+                    ],
+                    "validation_steps": [
+                        "Check permissions",
+                        "Analyze grants",
+                        "Review chains",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Permission system",
+                        "Access control"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify weak points",
+                    "Chain vulnerabilities",
+                    "Escalate permissions",
+                    "Gain privileges",
+                    "Maintain access"
+                ],
+                "requirements": [
+                    "Permission knowledge",
+                    "Chain exploitation",
+                    "System understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test chain",
+                        "Verify escalation",
+                        "Check access"
+                    ],
+                    "expected_results": [
+                        "Chain works",
+                        "Permissions gained",
+                        "Access elevated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Permission system",
+                "Access control",
+                "Security model"
+            ],
+            "tags": [
+                "permission",
+                "escalation",
+                "privilege",
+                "chain"
+            ]
+        },
+        {
+            "id": "PERM-005",
+            "name": "Permission Revocation Bypass",
+            "description": "Application maintains access to sensitive resources after permission revocation through persistence techniques.",
+            "severity": {
+                "level": "High",
+                "impact": "Unauthorized access, privacy violation, and permission bypass",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "onRequestPermissionsResult\\([^)]+\\)",
+                    "shouldShowRequestPermissionRationale\\([^)]+\\)",
+                    "(?<!check)PermissionResult\\.[^;]+",
+                    "SharedPreferences\\.putBoolean\\([^,]*permission[^)]*\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Permission handling",
+                    "Result processing",
+                    "State persistence",
+                    "Access control"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Permission handling",
+                        "State management",
+                        "Access control"
+                    ],
+                    "exclusion_patterns": [
+                        "validateRevocation",
+                        "checkState",
+                        "secureAccess"
+                    ],
+                    "validation_steps": [
+                        "Check handling",
+                        "Analyze state",
+                        "Review persistence",
+                        "Verify cleanup"
+                    ],
+                    "context_requirements": [
+                        "Permission system",
+                        "State handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Grant permission",
+                    "Cache access",
+                    "Revoke permission",
+                    "Maintain access",
+                    "Bypass controls"
+                ],
+                "requirements": [
+                    "Permission knowledge",
+                    "State manipulation",
+                    "Access persistence"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Grant access",
+                        "Revoke permission",
+                        "Check persistence"
+                    ],
+                    "expected_results": [
+                        "Access maintained",
+                        "Controls bypassed",
+                        "Data accessible"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Permission system",
+                "State management",
+                "Access control"
+            ],
+            "tags": [
+                "permission",
+                "revocation",
+                "bypass",
+                "persistence"
+            ]
+        },
+        {
+            "id": "PERM-006",
+            "name": "Runtime Permission Manipulation",
+            "description": "Application allows manipulation of runtime permissions through improper state handling and validation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Permission manipulation, access control bypass, and security compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "requestPermissions\\([^)]+\\)",
+                    "checkCallingPermission\\([^)]+\\)",
+                    "(?<!validate)RuntimePermission\\.[^;]+",
+                    "enforcePermission\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Permission requests",
+                    "Runtime checks",
+                    "State handling",
+                    "Access control"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Runtime handling",
+                        "State validation",
+                        "Access control"
+                    ],
+                    "exclusion_patterns": [
+                        "validateRuntime",
+                        "checkState",
+                        "securePermission"
+                    ],
+                    "validation_steps": [
+                        "Check runtime",
+                        "Analyze state",
+                        "Review handling",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Permission system",
+                        "Runtime handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify handling",
+                    "Analyze state",
+                    "Manipulate runtime",
+                    "Bypass checks",
+                    "Gain access"
+                ],
+                "requirements": [
+                    "Runtime knowledge",
+                    "State manipulation",
+                    "Permission system"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Modify runtime",
+                        "Bypass checks",
+                        "Verify access"
+                    ],
+                    "expected_results": [
+                        "State manipulated",
+                        "Checks bypassed",
+                        "Access gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Permission system",
+                "Runtime handler",
+                "Access control"
+            ],
+            "tags": [
+                "permission",
+                "runtime",
+                "manipulation",
+                "bypass"
+            ]
+        }
+    ]
+}

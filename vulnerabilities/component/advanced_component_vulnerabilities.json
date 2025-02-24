@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Component Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:54:00Z",
+        "description": "Advanced component security vulnerabilities in Android applications including activity hijacking, service binding, and content provider manipulation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "COMP-006",
+            "name": "Activity Task Affinity",
+            "description": "Application sets custom task affinity without proper validation, enabling activity hijacking and UI spoofing attacks.",
+            "severity": {
+                "level": "High",
+                "impact": "UI spoofing, activity hijacking, and phishing attacks",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "android:taskAffinity=\"[^\"]+\"",
+                    "FLAG_ACTIVITY_NEW_TASK",
+                    "(?<!validate)TaskAffinity[A-Z][a-zA-Z]*\\.[^;]+",
+                    "moveTaskToBack\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Task affinity",
+                    "Activity flags",
+                    "Task management",
+                    "Stack handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Task configuration",
+                        "Activity handling",
+                        "Stack management"
+                    ],
+                    "exclusion_patterns": [
+                        "validateTask",
+                        "secureAffinity",
+                        "checkStack"
+                    ],
+                    "validation_steps": [
+                        "Check affinity",
+                        "Analyze tasks",
+                        "Review flags",
+                        "Verify stack"
+                    ],
+                    "context_requirements": [
+                        "Activity implementation",
+                        "Task management"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify affinity",
+                    "Create malicious task",
+                    "Hijack activity",
+                    "Spoof UI",
+                    "Phish credentials"
+                ],
+                "requirements": [
+                    "Task knowledge",
+                    "Activity control",
+                    "UI manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Set affinity",
+                        "Launch task",
+                        "Check hijack"
+                    ],
+                    "expected_results": [
+                        "Task created",
+                        "Activity hijacked",
+                        "UI spoofed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Activity system",
+                "Task manager",
+                "UI handler"
+            ],
+            "tags": [
+                "activity",
+                "task-affinity",
+                "ui-spoofing",
+                "phishing"
+            ]
+        },
+        {
+            "id": "COMP-007",
+            "name": "Service Binding Vulnerability",
+            "description": "Application exposes service binding without proper authentication, enabling unauthorized access and service manipulation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Service manipulation, data theft, and privilege escalation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "android:exported=\"true\".*Service",
+                    "onBind\\([^)]+\\)",
+                    "(?<!secure)ServiceConnection\\.[^;]+",
+                    "bindService\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Service binding",
+                    "Export settings",
+                    "Connection handling",
+                    "Authentication"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service exposure",
+                        "Binding handling",
+                        "Authentication"
+                    ],
+                    "exclusion_patterns": [
+                        "validateBinding",
+                        "authenticateService",
+                        "checkPermission"
+                    ],
+                    "validation_steps": [
+                        "Check exposure",
+                        "Analyze binding",
+                        "Review auth",
+                        "Verify controls"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Security controls"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify service",
+                    "Create connection",
+                    "Bypass auth",
+                    "Bind service",
+                    "Manipulate data"
+                ],
+                "requirements": [
+                    "Service knowledge",
+                    "Binding control",
+                    "Auth bypass"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Bind service",
+                        "Access data",
+                        "Manipulate service"
+                    ],
+                    "expected_results": [
+                        "Service bound",
+                        "Data accessed",
+                        "Service controlled"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service system",
+                "Binding handler",
+                "Authentication"
+            ],
+            "tags": [
+                "service",
+                "binding",
+                "authentication",
+                "exposure"
+            ]
+        },
+        {
+            "id": "COMP-008",
+            "name": "Content Provider SQL Injection",
+            "description": "Application fails to properly validate content provider queries, enabling SQL injection and unauthorized data access.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Data theft, database manipulation, and privacy violation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "query\\([^)]+\\)",
+                    "rawQuery\\([^)]+\\)",
+                    "(?<!escape)Selection[A-Z][a-zA-Z]*\\.[^;]+",
+                    "ContentResolver\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Query handling",
+                    "SQL operations",
+                    "Provider access",
+                    "Data retrieval"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Query handling",
+                        "Input validation",
+                        "SQL operations"
+                    ],
+                    "exclusion_patterns": [
+                        "validateQuery",
+                        "escapeString",
+                        "sanitizeInput"
+                    ],
+                    "validation_steps": [
+                        "Check queries",
+                        "Analyze input",
+                        "Review validation",
+                        "Verify sanitization"
+                    ],
+                    "context_requirements": [
+                        "Provider implementation",
+                        "Query handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify provider",
+                    "Craft injection",
+                    "Execute query",
+                    "Extract data",
+                    "Manipulate database"
+                ],
+                "requirements": [
+                    "SQL knowledge",
+                    "Provider access",
+                    "Query manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Inject query",
+                        "Access data",
+                        "Modify database"
+                    ],
+                    "expected_results": [
+                        "Query executed",
+                        "Data extracted",
+                        "Database modified"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Content provider",
+                "Query processor",
+                "Database handler"
+            ],
+            "tags": [
+                "provider",
+                "sql-injection",
+                "database",
+                "query"
+            ]
+        }
+    ]
+}

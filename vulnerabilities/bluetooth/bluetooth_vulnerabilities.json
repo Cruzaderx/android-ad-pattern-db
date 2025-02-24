@@ -1,0 +1,193 @@
+{
+    "metadata": {
+        "category": "Bluetooth Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T05:40:00Z",
+        "description": "Bluetooth and BLE-related security vulnerabilities in Android applications"
+    },
+    "vulnerabilities": [
+        {
+            "id": "BLE-001",
+            "name": "BLE Insecure Authentication",
+            "description": "Bluetooth Low Energy implementation lacks proper authentication mechanisms, allowing unauthorized devices to connect and access sensitive GATT services/characteristics.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Unauthorized device pairing, data interception, and service manipulation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "BluetoothGattCharacteristic\\.PERMISSION_READ(?!.*_ENCRYPTED)",
+                    "BluetoothGattCharacteristic\\.PERMISSION_WRITE(?!.*_ENCRYPTED)",
+                    "setCharacteristic\\([^,]+,[^,]+,\\s*false\\s*\\)",
+                    "GATT_SUCCESS.*\\{[^}]*return\\s+true"
+                ],
+                "method": "static",
+                "indicators": [
+                    "BLE GATT service implementation",
+                    "Characteristic permissions",
+                    "Authentication checks",
+                    "Encryption requirements"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "App implements BLE GATT server",
+                        "Sensitive data transmitted via BLE",
+                        "Custom characteristic definitions"
+                    ],
+                    "exclusion_patterns": [
+                        "PERMISSION_READ_ENCRYPTED",
+                        "PERMISSION_WRITE_ENCRYPTED",
+                        "requireDeviceBonding\\(true\\)"
+                    ],
+                    "validation_steps": [
+                        "Check characteristic permissions",
+                        "Verify authentication requirements",
+                        "Analyze encryption usage",
+                        "Review pairing requirements"
+                    ],
+                    "context_requirements": [
+                        "App uses BLE for data transfer",
+                        "Custom GATT services defined"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Scan for vulnerable BLE device",
+                    "Connect without authentication",
+                    "Enumerate GATT services",
+                    "Access unprotected characteristics",
+                    "Read/write sensitive data"
+                ],
+                "requirements": [
+                    "BLE-capable device",
+                    "BLE scanning/manipulation tools",
+                    "Knowledge of GATT structure"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Connect without pairing",
+                        "Access protected characteristics",
+                        "Modify characteristic values"
+                    ],
+                    "expected_results": [
+                        "Successful connection",
+                        "Characteristic access",
+                        "Data manipulation"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BLE GATT services",
+                "Characteristic permissions",
+                "Authentication mechanism",
+                "Data encryption"
+            ],
+            "tags": [
+                "bluetooth",
+                "ble",
+                "gatt",
+                "authentication"
+            ]
+        },
+        {
+            "id": "BLE-002",
+            "name": "BLE Man-in-the-Middle Vulnerability",
+            "description": "BLE communication lacks proper encryption and device verification, making it susceptible to man-in-the-middle attacks and data interception.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Data interception, connection hijacking, and spoofing attacks",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "BluetoothDevice\\.BOND_NONE",
+                    "BluetoothGattCallback(?!.*verify)",
+                    "connectGatt\\([^,]+,\\s*true\\s*,",
+                    "(?<!encrypted)Characteristic\\.setValue\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "BLE connection handling",
+                    "Data transmission methods",
+                    "Security mode configuration",
+                    "Pairing mechanism"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "App implements BLE client",
+                        "Sensitive data transmission",
+                        "Custom connection handling"
+                    ],
+                    "exclusion_patterns": [
+                        "verifyDeviceIdentity",
+                        "SecurityMode\\.LEVEL_4",
+                        "validateConnection"
+                    ],
+                    "validation_steps": [
+                        "Check encryption usage",
+                        "Verify device authentication",
+                        "Analyze connection security",
+                        "Review data protection"
+                    ],
+                    "context_requirements": [
+                        "App uses BLE connections",
+                        "Data exchange implementation"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 80,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Set up BLE proxy device",
+                    "Intercept connection attempt",
+                    "Spoof legitimate device",
+                    "Capture/modify data packets",
+                    "Relay modified communication"
+                ],
+                "requirements": [
+                    "BLE hardware tools",
+                    "Packet capture software",
+                    "Knowledge of BLE protocol",
+                    "Target device specifications"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Intercept BLE connection",
+                        "Capture data packets",
+                        "Modify transmitted data"
+                    ],
+                    "expected_results": [
+                        "Connection interception",
+                        "Data capture success",
+                        "Modified data accepted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BLE connection handling",
+                "Data transmission",
+                "Device authentication",
+                "Packet encryption"
+            ],
+            "tags": [
+                "bluetooth",
+                "ble",
+                "mitm",
+                "encryption"
+            ]
+        }
+    ]
+}

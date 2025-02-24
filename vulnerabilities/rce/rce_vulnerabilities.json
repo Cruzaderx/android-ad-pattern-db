@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Remote Code Execution",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T06:52:00Z",
+        "description": "Remote Code Execution vulnerabilities in Android applications including WebView, intent handlers, and deserialization vulnerabilities"
+    },
+    "vulnerabilities": [
+        {
+            "id": "RCE-001",
+            "name": "WebView JavaScript Bridge RCE",
+            "description": "Application exposes dangerous native methods through WebView JavaScript interface without proper input validation, allowing arbitrary code execution.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Remote code execution, data theft, and complete app compromise",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "@JavascriptInterface\\s+public\\s+[^{]+\\{[^}]*Runtime\\.exec",
+                    "@JavascriptInterface\\s+public\\s+[^{]+\\{[^}]*ProcessBuilder",
+                    "@JavascriptInterface\\s+public\\s+[^{]+\\{[^}]*load(Library|Class)",
+                    "addJavascriptInterface\\([^,]+,[^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "JavaScript interface",
+                    "Native method exposure",
+                    "Command execution",
+                    "Code loading"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "WebView usage",
+                        "JavaScript enabled",
+                        "Interface exposure"
+                    ],
+                    "exclusion_patterns": [
+                        "validateJavaScriptInput",
+                        "sanitizeCommand",
+                        "secureInterface"
+                    ],
+                    "validation_steps": [
+                        "Check interface methods",
+                        "Analyze input validation",
+                        "Review command execution",
+                        "Verify sandboxing"
+                    ],
+                    "context_requirements": [
+                        "JavaScript bridge usage",
+                        "Native method access"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 95,
+                    "manual_review": 85
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify exposed interface",
+                    "Analyze available methods",
+                    "Craft JavaScript payload",
+                    "Execute native code",
+                    "Establish persistence"
+                ],
+                "requirements": [
+                    "WebView access",
+                    "JavaScript execution",
+                    "Interface documentation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Call native methods",
+                        "Execute commands",
+                        "Load malicious code"
+                    ],
+                    "expected_results": [
+                        "Code execution",
+                        "Command output",
+                        "System access"
+                    ]
+                }
+            },
+            "affected_components": [
+                "WebView",
+                "JavaScript interface",
+                "Native methods"
+            ],
+            "tags": [
+                "rce",
+                "webview",
+                "javascript",
+                "native"
+            ]
+        },
+        {
+            "id": "RCE-002",
+            "name": "Intent URI Handler RCE",
+            "description": "Application processes intent URIs without proper validation, allowing command injection through maliciously crafted URIs.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Remote code execution, intent hijacking, and system compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "getIntent\\(\\)\\.getData\\(\\)[^;]*exec\\(",
+                    "Uri\\.parse\\([^)]+\\)[^;]*Runtime",
+                    "intent://[^#]+#Intent;[^;]*package=",
+                    "parseUri\\([^,]+,[^)]+\\)[^;]*execute"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Intent URI handling",
+                    "Command execution",
+                    "URI parsing",
+                    "Intent processing"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Intent URI handling",
+                        "Command execution",
+                        "URI processing"
+                    ],
+                    "exclusion_patterns": [
+                        "validateUri",
+                        "sanitizeCommand",
+                        "checkIntent"
+                    ],
+                    "validation_steps": [
+                        "Check URI handling",
+                        "Analyze command usage",
+                        "Review intent processing",
+                        "Verify validation"
+                    ],
+                    "context_requirements": [
+                        "Intent URI support",
+                        "Command execution"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify URI handler",
+                    "Analyze processing logic",
+                    "Craft malicious URI",
+                    "Inject commands",
+                    "Execute payload"
+                ],
+                "requirements": [
+                    "Intent URI scheme",
+                    "Command injection point",
+                    "URI crafting tools"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Send malicious URI",
+                        "Trigger processing",
+                        "Execute commands"
+                    ],
+                    "expected_results": [
+                        "URI accepted",
+                        "Command executed",
+                        "System compromised"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Intent handling",
+                "URI processing",
+                "Command execution"
+            ],
+            "tags": [
+                "rce",
+                "intent",
+                "uri",
+                "command-injection"
+            ]
+        },
+        {
+            "id": "RCE-003",
+            "name": "Serialization RCE",
+            "description": "Application deserializes untrusted data without proper validation, allowing arbitrary code execution through malicious serialized objects.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Remote code execution, object injection, and system compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "ObjectInputStream\\([^)]+\\)\\.readObject\\(\\)",
+                    "Parcel\\.readSerializable\\(\\)",
+                    "Bundle\\.getSerializable\\([^)]+\\)",
+                    "(?<!validate)SerializationUtils\\.deserialize"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Object deserialization",
+                    "Serializable usage",
+                    "Parcel reading",
+                    "Bundle unpacking"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Deserialization usage",
+                        "Serializable objects",
+                        "Data unpacking"
+                    ],
+                    "exclusion_patterns": [
+                        "validateSerializedData",
+                        "secureDeserialization",
+                        "checkObjectType"
+                    ],
+                    "validation_steps": [
+                        "Check deserialization",
+                        "Analyze object types",
+                        "Review validation",
+                        "Verify whitelist"
+                    ],
+                    "context_requirements": [
+                        "Serialization usage",
+                        "Object handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify deserialization",
+                    "Create gadget chain",
+                    "Serialize payload",
+                    "Deliver object",
+                    "Trigger execution"
+                ],
+                "requirements": [
+                    "Serialization knowledge",
+                    "Gadget chain creation",
+                    "Object delivery method"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Create payload",
+                        "Deliver object",
+                        "Trigger deserialization"
+                    ],
+                    "expected_results": [
+                        "Object accepted",
+                        "Gadget executed",
+                        "Code execution"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Serialization",
+                "Object handling",
+                "Data processing"
+            ],
+            "tags": [
+                "rce",
+                "serialization",
+                "deserialization",
+                "object-injection"
+            ]
+        }
+    ]
+}

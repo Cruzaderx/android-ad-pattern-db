@@ -1,0 +1,495 @@
+{
+    "metadata": {
+        "category": "Backup Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T12:57:00Z",
+        "description": "Backup-related security vulnerabilities including data exposure, encryption weaknesses, and configuration issues"
+    },
+    "vulnerabilities": [
+        {
+            "id": "BAK-001",
+            "name": "Auto-Backup Data Exposure",
+            "description": "Application's auto-backup configuration can expose sensitive data through Android's automatic backup mechanism.",
+            "severity": {
+                "level": "High",
+                "impact": "Data exposure and privacy violation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android:allowBackup",
+                "methods": [
+                    "android:fullBackupContent",
+                    "android:backupAgent",
+                    "android:restoreAnyVersion"
+                ],
+                "manifest": "backup_config"
+            },
+            "detection": {
+                "pattern": [
+                    "android:allowBackup=\"true\"",
+                    "android:fullBackupContent=\"[^\"]+\"",
+                    "android:backupAgent=\"[^\"]+\""
+                ],
+                "method": "static",
+                "indicators": [
+                    "Backup configuration",
+                    "Data inclusion",
+                    "Agent implementation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Backup implementation",
+                        "Data handling",
+                        "Privacy validation"
+                    ],
+                    "exclusion_patterns": [
+                        "excludeFromBackup",
+                        "noBackupFilesDir",
+                        "preventBackup"
+                    ],
+                    "validation_steps": [
+                        "Check configuration",
+                        "Analyze data",
+                        "Review privacy",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Backup implementation",
+                        "Data handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Enable backup",
+                    "Extract data",
+                    "Analyze content",
+                    "Identify patterns",
+                    "Access information"
+                ],
+                "requirements": [
+                    "Backup access",
+                    "Data extraction",
+                    "Pattern recognition"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test backup",
+                        "Check exposure",
+                        "Verify data"
+                    ],
+                    "expected_results": [
+                        "Backup created",
+                        "Data exposed",
+                        "Privacy compromised"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BackupAgent",
+                "Data handler",
+                "Privacy manager"
+            ],
+            "tags": [
+                "backup",
+                "privacy",
+                "exposure",
+                "configuration"
+            ]
+        },
+        {
+            "id": "BAK-002",
+            "name": "Backup Encryption Weakness",
+            "description": "Application's backup encryption implementation can be bypassed to access sensitive data.",
+            "severity": {
+                "level": "High",
+                "impact": "Data exposure and encryption bypass",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.backup.BackupAgentHelper",
+                "methods": [
+                    "onBackup",
+                    "onRestore",
+                    "onFullBackup"
+                ],
+                "encryption": "backup_encryption"
+            },
+            "detection": {
+                "pattern": [
+                    "extends\\s+BackupAgentHelper",
+                    "onBackup\\([^)]+\\)",
+                    "onRestore\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Encryption handling",
+                    "Key management",
+                    "Data protection"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Encryption implementation",
+                        "Key handling",
+                        "Security validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateEncryption",
+                        "checkKey",
+                        "verifyBackup"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze encryption",
+                        "Review keys",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Encryption implementation",
+                        "Key handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Analyze encryption",
+                    "Identify weakness",
+                    "Bypass protection",
+                    "Extract data",
+                    "Access content"
+                ],
+                "requirements": [
+                    "Encryption knowledge",
+                    "Bypass technique",
+                    "Data extraction"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test encryption",
+                        "Check bypass",
+                        "Verify access"
+                    ],
+                    "expected_results": [
+                        "Encryption bypassed",
+                        "Data accessed",
+                        "Protection circumvented"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BackupAgentHelper",
+                "Encryption system",
+                "Data protection"
+            ],
+            "tags": [
+                "backup",
+                "encryption",
+                "bypass",
+                "weakness"
+            ]
+        },
+        {
+            "id": "BAK-003",
+            "name": "Backup File Permission",
+            "description": "Application's backup files have improper permissions allowing unauthorized access.",
+            "severity": {
+                "level": "High",
+                "impact": "Unauthorized access and data exposure",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "java.io.File",
+                "methods": [
+                    "setReadable",
+                    "setWritable",
+                    "setExecutable"
+                ],
+                "permission": "file_permission"
+            },
+            "detection": {
+                "pattern": [
+                    "setReadable\\(true, false\\)",
+                    "setWritable\\(true, false\\)",
+                    "MODE_WORLD_READABLE"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Permission setting",
+                    "Access control",
+                    "File handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Permission implementation",
+                        "Access handling",
+                        "Security validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePermission",
+                        "checkAccess",
+                        "secureFile"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze permissions",
+                        "Review access",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Permission implementation",
+                        "Access handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Locate files",
+                    "Check permissions",
+                    "Access backup",
+                    "Extract data",
+                    "Analyze content"
+                ],
+                "requirements": [
+                    "File access",
+                    "Permission knowledge",
+                    "Data extraction"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test permissions",
+                        "Check access",
+                        "Verify extraction"
+                    ],
+                    "expected_results": [
+                        "Files accessible",
+                        "Data extracted",
+                        "Content analyzed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "File system",
+                "Permission system",
+                "Backup storage"
+            ],
+            "tags": [
+                "backup",
+                "permission",
+                "file-access",
+                "storage"
+            ]
+        },
+        {
+            "id": "BAK-004",
+            "name": "Backup Data Injection",
+            "description": "Application's backup restore process can be exploited through data injection to execute unauthorized operations.",
+            "severity": {
+                "level": "High",
+                "impact": "Data manipulation and code execution",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.app.backup.BackupAgent",
+                "methods": [
+                    "onRestore",
+                    "onRestoreFile",
+                    "onRestoreFinished"
+                ],
+                "restore": "backup_restore"
+            },
+            "detection": {
+                "pattern": [
+                    "onRestore\\([^)]+\\)",
+                    "onRestoreFile\\([^)]+\\)",
+                    "restoreEntity\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Restore handling",
+                    "Data validation",
+                    "Input processing"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Restore implementation",
+                        "Data handling",
+                        "Validation checks"
+                    ],
+                    "exclusion_patterns": [
+                        "validateRestore",
+                        "checkData",
+                        "verifyInput"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze data",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Restore implementation",
+                        "Data handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Create backup",
+                    "Modify data",
+                    "Inject payload",
+                    "Trigger restore",
+                    "Execute operation"
+                ],
+                "requirements": [
+                    "Backup access",
+                    "Data modification",
+                    "Restore control"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test injection",
+                        "Check restore",
+                        "Verify execution"
+                    ],
+                    "expected_results": [
+                        "Data injected",
+                        "Restore completed",
+                        "Operation executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BackupAgent",
+                "Restore handler",
+                "Data processor"
+            ],
+            "tags": [
+                "backup",
+                "injection",
+                "restore",
+                "manipulation"
+            ]
+        },
+        {
+            "id": "BAK-005",
+            "name": "Backup Version Mismatch",
+            "description": "Application's backup version handling can be exploited to restore incompatible data or trigger unintended behavior.",
+            "severity": {
+                "level": "High",
+                "impact": "Data corruption and application instability",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android:restoreAnyVersion",
+                "methods": [
+                    "getBackupVersion",
+                    "onRestoreFinished",
+                    "onQuotaExceeded"
+                ],
+                "version": "backup_version"
+            },
+            "detection": {
+                "pattern": [
+                    "android:restoreAnyVersion=\"true\"",
+                    "getBackupVersion\\(\\)",
+                    "onRestoreFinished\\("
+                ],
+                "method": "static",
+                "indicators": [
+                    "Version handling",
+                    "Compatibility check",
+                    "Restore validation"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Version implementation",
+                        "Compatibility handling",
+                        "Validation checks"
+                    ],
+                    "exclusion_patterns": [
+                        "validateVersion",
+                        "checkCompatibility",
+                        "verifyRestore"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze versions",
+                        "Review compatibility",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Version implementation",
+                        "Compatibility handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Create backup",
+                    "Modify version",
+                    "Trigger restore",
+                    "Monitor behavior",
+                    "Exploit mismatch"
+                ],
+                "requirements": [
+                    "Version control",
+                    "Backup access",
+                    "Restore capability"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test versions",
+                        "Check restore",
+                        "Verify behavior"
+                    ],
+                    "expected_results": [
+                        "Version mismatched",
+                        "Data corrupted",
+                        "App destabilized"
+                    ]
+                }
+            },
+            "affected_components": [
+                "BackupAgent",
+                "Version handler",
+                "Restore manager"
+            ],
+            "tags": [
+                "backup",
+                "version",
+                "compatibility",
+                "corruption"
+            ]
+        }
+    ]
+}

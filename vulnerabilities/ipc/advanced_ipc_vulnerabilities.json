@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "IPC/Binder Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:12:00Z",
+        "description": "Advanced IPC and Binder-related security vulnerabilities in Android applications including transaction manipulation, service hijacking, and reference counting attacks"
+    },
+    "vulnerabilities": [
+        {
+            "id": "IPC-004",
+            "name": "Binder Token Abuse",
+            "description": "Application fails to properly validate Binder tokens, enabling unauthorized service access and IPC manipulation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Service hijacking, unauthorized access, and IPC manipulation",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "getCallingUid\\(\\)",
+                    "clearCallingIdentity\\(\\)",
+                    "Binder\\.getCallingPid\\(\\)",
+                    "(?<!validate)BinderProxy\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Binder identity",
+                    "Token handling",
+                    "Caller validation",
+                    "IPC authentication"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Binder usage",
+                        "Identity checks",
+                        "Token validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateToken",
+                        "checkIdentity",
+                        "verifyBinder"
+                    ],
+                    "validation_steps": [
+                        "Check token usage",
+                        "Analyze identity",
+                        "Review validation",
+                        "Verify auth"
+                    ],
+                    "context_requirements": [
+                        "Binder implementation",
+                        "IPC security"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify token usage",
+                    "Analyze validation",
+                    "Forge token",
+                    "Bypass checks",
+                    "Access service"
+                ],
+                "requirements": [
+                    "Binder knowledge",
+                    "Token manipulation",
+                    "IPC understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Forge token",
+                        "Send request",
+                        "Access service"
+                    ],
+                    "expected_results": [
+                        "Token accepted",
+                        "Checks bypassed",
+                        "Service accessed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Binder system",
+                "IPC security",
+                "Service access"
+            ],
+            "tags": [
+                "binder",
+                "token",
+                "ipc",
+                "authentication"
+            ]
+        },
+        {
+            "id": "IPC-005",
+            "name": "IPC Message Manipulation",
+            "description": "Application allows manipulation of IPC messages through improper validation, enabling message injection and service manipulation.",
+            "severity": {
+                "level": "High",
+                "impact": "Message injection, service manipulation, and data theft",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "Parcel\\.obtain\\(\\)",
+                    "writeToParcel\\([^)]+\\)",
+                    "createFromParcel\\([^)]+\\)",
+                    "(?<!validate)Message\\.[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Message handling",
+                    "Parcel creation",
+                    "Data marshalling",
+                    "IPC communication"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "IPC messaging",
+                        "Parcel handling",
+                        "Message validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateMessage",
+                        "checkParcel",
+                        "verifyData"
+                    ],
+                    "validation_steps": [
+                        "Check message handling",
+                        "Analyze parcels",
+                        "Review validation",
+                        "Verify integrity"
+                    ],
+                    "context_requirements": [
+                        "IPC implementation",
+                        "Message handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify message flow",
+                    "Analyze handling",
+                    "Craft message",
+                    "Inject payload",
+                    "Manipulate service"
+                ],
+                "requirements": [
+                    "IPC knowledge",
+                    "Message crafting",
+                    "Service understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Send message",
+                        "Check handling",
+                        "Verify injection"
+                    ],
+                    "expected_results": [
+                        "Message accepted",
+                        "Payload executed",
+                        "Service affected"
+                    ]
+                }
+            },
+            "affected_components": [
+                "IPC system",
+                "Message handler",
+                "Service components"
+            ],
+            "tags": [
+                "ipc",
+                "message",
+                "injection",
+                "manipulation"
+            ]
+        },
+        {
+            "id": "IPC-006",
+            "name": "Service Connection Hijacking",
+            "description": "Application exposes service connections without proper validation, enabling unauthorized service binding and connection hijacking.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Service hijacking, unauthorized binding, and data interception",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "bindService\\([^)]+\\)",
+                    "ServiceConnection\\{[^}]+\\}",
+                    "onServiceConnected\\([^)]+\\)",
+                    "(?<!validate)ServiceBinding[^;]+"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Service binding",
+                    "Connection handling",
+                    "Binding validation",
+                    "Service connection"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service usage",
+                        "Binding handling",
+                        "Connection validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateBinding",
+                        "checkConnection",
+                        "secureService"
+                    ],
+                    "validation_steps": [
+                        "Check binding",
+                        "Analyze connection",
+                        "Review validation",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Binding security"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify service",
+                    "Analyze binding",
+                    "Create connection",
+                    "Hijack binding",
+                    "Intercept data"
+                ],
+                "requirements": [
+                    "Service knowledge",
+                    "Binding manipulation",
+                    "IPC understanding"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Bind service",
+                        "Hijack connection",
+                        "Intercept data"
+                    ],
+                    "expected_results": [
+                        "Connection hijacked",
+                        "Service bound",
+                        "Data intercepted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service system",
+                "Binding mechanism",
+                "Connection handler"
+            ],
+            "tags": [
+                "service",
+                "binding",
+                "hijacking",
+                "ipc"
+            ]
+        }
+    ]
+}

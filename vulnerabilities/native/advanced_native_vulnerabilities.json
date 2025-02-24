@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Native Code Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:23:00Z",
+        "description": "Advanced native code vulnerabilities in Android applications including library injection, function pointer manipulation, and memory corruption techniques"
+    },
+    "vulnerabilities": [
+        {
+            "id": "NATIVE-004",
+            "name": "Native Function Pointer Manipulation",
+            "description": "Application fails to protect function pointers in native code, enabling arbitrary code execution through pointer manipulation.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution, control flow hijacking, and system compromise",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "dlsym\\([^)]+\\)",
+                    "GetProcAddress\\([^)]+\\)",
+                    "(?<!check)FunctionPointer\\.[^;]+",
+                    "void\\s*\\(\\*[^)]+\\)\\s*\\([^)]*\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Function pointers",
+                    "Dynamic linking",
+                    "Symbol resolution",
+                    "Pointer usage"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Native code",
+                        "Pointer handling",
+                        "Symbol loading"
+                    ],
+                    "exclusion_patterns": [
+                        "validatePointer",
+                        "checkFunction",
+                        "secureSymbol"
+                    ],
+                    "validation_steps": [
+                        "Check pointer usage",
+                        "Analyze resolution",
+                        "Review protection",
+                        "Verify integrity"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Function handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify pointer",
+                    "Analyze protection",
+                    "Create payload",
+                    "Modify pointer",
+                    "Execute code"
+                ],
+                "requirements": [
+                    "Native access",
+                    "Pointer control",
+                    "Memory manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Locate pointer",
+                        "Modify target",
+                        "Execute payload"
+                    ],
+                    "expected_results": [
+                        "Pointer modified",
+                        "Flow hijacked",
+                        "Code executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Native code",
+                "Function pointers",
+                "Dynamic linker"
+            ],
+            "tags": [
+                "native",
+                "pointer",
+                "code-execution",
+                "control-flow"
+            ]
+        },
+        {
+            "id": "NATIVE-005",
+            "name": "Native Library Injection",
+            "description": "Application allows unauthorized library injection through improper library loading validation, enabling code execution and system compromise.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Code execution, library compromise, and system manipulation",
+                "exploitability": "Hard"
+            },
+            "detection": {
+                "pattern": [
+                    "dlopen\\([^)]+\\)",
+                    "LoadLibrary[AW]?\\([^)]+\\)",
+                    "(?<!validate)LibraryLoader\\.[^;]+",
+                    "System\\.load(Library)?\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Library loading",
+                    "Dynamic linking",
+                    "Native loading",
+                    "Library handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Library usage",
+                        "Loading validation",
+                        "Path handling"
+                    ],
+                    "exclusion_patterns": [
+                        "validateLibrary",
+                        "checkLoading",
+                        "secureLoad"
+                    ],
+                    "validation_steps": [
+                        "Check loading",
+                        "Analyze paths",
+                        "Review validation",
+                        "Verify integrity"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Library handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Create library",
+                    "Place payload",
+                    "Inject library",
+                    "Force loading",
+                    "Execute code"
+                ],
+                "requirements": [
+                    "Library creation",
+                    "Loading control",
+                    "Path manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Create library",
+                        "Inject code",
+                        "Force load"
+                    ],
+                    "expected_results": [
+                        "Library injected",
+                        "Code loaded",
+                        "Payload executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Native loader",
+                "Library system",
+                "Dynamic linker"
+            ],
+            "tags": [
+                "native",
+                "library",
+                "injection",
+                "code-execution"
+            ]
+        },
+        {
+            "id": "NATIVE-006",
+            "name": "Native Memory Leak",
+            "description": "Application fails to properly manage native memory allocations, leading to memory leaks and potential denial of service.",
+            "severity": {
+                "level": "High",
+                "impact": "Resource exhaustion, system instability, and denial of service",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "malloc\\([^)]+\\)",
+                    "new\\s+[^;]+",
+                    "(?<!free\\s*)alloc[A-Z][a-zA-Z]*\\([^)]+\\)",
+                    "HeapAlloc\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Memory allocation",
+                    "Resource management",
+                    "Memory handling",
+                    "Heap operations"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Memory management",
+                        "Resource tracking",
+                        "Allocation handling"
+                    ],
+                    "exclusion_patterns": [
+                        "checkLeak",
+                        "validateMemory",
+                        "trackAllocation"
+                    ],
+                    "validation_steps": [
+                        "Check allocations",
+                        "Analyze freeing",
+                        "Review tracking",
+                        "Verify cleanup"
+                    ],
+                    "context_requirements": [
+                        "Native implementation",
+                        "Memory management"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify allocation",
+                    "Prevent cleanup",
+                    "Trigger allocation",
+                    "Exhaust memory",
+                    "Cause instability"
+                ],
+                "requirements": [
+                    "Memory control",
+                    "Allocation tracking",
+                    "Resource manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Allocate memory",
+                        "Block cleanup",
+                        "Monitor usage"
+                    ],
+                    "expected_results": [
+                        "Memory leaked",
+                        "Resources exhausted",
+                        "System impacted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Memory manager",
+                "Resource handler",
+                "Native allocator"
+            ],
+            "tags": [
+                "native",
+                "memory-leak",
+                "resource-exhaustion",
+                "denial-of-service"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,497 @@
+{
+    "metadata": {
+        "category": "Broadcast Security",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T11:14:00Z",
+        "description": "Broadcast-related security vulnerabilities including receiver hijacking, intent spoofing, and privilege escalation"
+    },
+    "vulnerabilities": [
+        {
+            "id": "BCAST-001",
+            "name": "Ordered Broadcast Chain Manipulation",
+            "description": "Application's ordered broadcast chain can be manipulated to intercept, modify, or block broadcast messages.",
+            "severity": {
+                "level": "High",
+                "impact": "Broadcast interception and manipulation",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.BroadcastReceiver",
+                "methods": [
+                    "sendOrderedBroadcast",
+                    "onReceive",
+                    "abortBroadcast"
+                ],
+                "manifest": "AndroidManifest.xml"
+            },
+            "detection": {
+                "pattern": [
+                    "sendOrderedBroadcast\\([^)]+\\)",
+                    "<receiver[^>]+android:priority=",
+                    "abortBroadcast\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Ordered broadcast",
+                    "Priority setting",
+                    "Chain handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Broadcast implementation",
+                        "Priority handling",
+                        "Chain validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateBroadcast",
+                        "checkPriority",
+                        "verifyChain"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze chain",
+                        "Review priorities",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Broadcast implementation",
+                        "Chain handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify chain",
+                    "Set priority",
+                    "Intercept broadcast",
+                    "Modify data",
+                    "Block delivery"
+                ],
+                "requirements": [
+                    "Broadcast access",
+                    "Priority control",
+                    "Chain knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test chain",
+                        "Check priority",
+                        "Verify manipulation"
+                    ],
+                    "expected_results": [
+                        "Chain intercepted",
+                        "Data modified",
+                        "Delivery blocked"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Broadcast receiver",
+                "Priority handler",
+                "Chain manager"
+            ],
+            "tags": [
+                "broadcast",
+                "ordered",
+                "chain",
+                "manipulation"
+            ]
+        },
+        {
+            "id": "BCAST-002",
+            "name": "Sticky Broadcast Persistence",
+            "description": "Application's sticky broadcast can be persisted and accessed by unauthorized applications.",
+            "severity": {
+                "level": "High",
+                "impact": "Data exposure and unauthorized access",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.Context",
+                "methods": [
+                    "sendStickyBroadcast",
+                    "removeStickyBroadcast"
+                ],
+                "permissions": [
+                    "android.permission.BROADCAST_STICKY"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "sendStickyBroadcast\\([^)]+\\)",
+                    "BROADCAST_STICKY",
+                    "removeStickyBroadcast\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Sticky broadcast",
+                    "Permission usage",
+                    "Broadcast handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Broadcast implementation",
+                        "Permission handling",
+                        "Persistence validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateSticky",
+                        "checkPersistence",
+                        "verifyBroadcast"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze persistence",
+                        "Review handling",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Broadcast implementation",
+                        "Persistence handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify broadcast",
+                    "Access data",
+                    "Persist state",
+                    "Extract information",
+                    "Maintain access"
+                ],
+                "requirements": [
+                    "Sticky permission",
+                    "Broadcast access",
+                    "State knowledge"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test persistence",
+                        "Check access",
+                        "Verify extraction"
+                    ],
+                    "expected_results": [
+                        "Data persisted",
+                        "Access gained",
+                        "Information extracted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Context handler",
+                "Broadcast manager",
+                "Permission system"
+            ],
+            "tags": [
+                "broadcast",
+                "sticky",
+                "persistence",
+                "exposure"
+            ]
+        },
+        {
+            "id": "BCAST-003",
+            "name": "System Broadcast Spoofing",
+            "description": "Application can spoof system broadcasts to trigger privileged operations or access sensitive data.",
+            "severity": {
+                "level": "Critical",
+                "impact": "Privilege escalation and unauthorized access",
+                "exploitability": "Hard"
+            },
+            "affects": {
+                "component": "android.content.Intent",
+                "actions": [
+                    "android.intent.action.BOOT_COMPLETED",
+                    "android.intent.action.PACKAGE_ADDED",
+                    "android.intent.action.BATTERY_CHANGED"
+                ],
+                "permissions": [
+                    "android.permission.BROADCAST_PACKAGE_REMOVED"
+                ]
+            },
+            "detection": {
+                "pattern": [
+                    "sendBroadcast\\([^)]+\\)",
+                    "android\\.intent\\.action\\.[A-Z_]+",
+                    "<receiver[^>]+android:permission="
+                ],
+                "method": "static",
+                "indicators": [
+                    "System broadcast",
+                    "Action handling",
+                    "Permission check"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Broadcast implementation",
+                        "Action validation",
+                        "Permission handling"
+                    ],
+                    "exclusion_patterns": [
+                        "validateAction",
+                        "checkSystem",
+                        "verifyBroadcast"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze actions",
+                        "Review permissions",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Broadcast implementation",
+                        "System handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify broadcast",
+                    "Spoof action",
+                    "Bypass permissions",
+                    "Trigger operation",
+                    "Escalate privileges"
+                ],
+                "requirements": [
+                    "System knowledge",
+                    "Action patterns",
+                    "Permission bypass"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test spoofing",
+                        "Check trigger",
+                        "Verify escalation"
+                    ],
+                    "expected_results": [
+                        "Action spoofed",
+                        "Operation triggered",
+                        "Privileges gained"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Intent handler",
+                "Broadcast manager",
+                "Permission system"
+            ],
+            "tags": [
+                "broadcast",
+                "system",
+                "spoofing",
+                "escalation"
+            ]
+        },
+        {
+            "id": "BCAST-004",
+            "name": "Dynamic Receiver Registration Bypass",
+            "description": "Application's dynamic broadcast receiver registration can be bypassed to intercept sensitive broadcasts.",
+            "severity": {
+                "level": "High",
+                "impact": "Broadcast interception and data theft",
+                "exploitability": "Medium"
+            },
+            "affects": {
+                "component": "android.content.Context",
+                "methods": [
+                    "registerReceiver",
+                    "unregisterReceiver"
+                ],
+                "registration": "dynamic"
+            },
+            "detection": {
+                "pattern": [
+                    "registerReceiver\\([^)]+\\)",
+                    "new IntentFilter\\([^)]+\\)",
+                    "unregisterReceiver\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Dynamic registration",
+                    "Filter creation",
+                    "Receiver handling"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Registration implementation",
+                        "Filter handling",
+                        "Lifecycle validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateRegistration",
+                        "checkFilter",
+                        "verifyReceiver"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze filters",
+                        "Review lifecycle",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Registration implementation",
+                        "Filter handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify receiver",
+                    "Create filter",
+                    "Register dynamically",
+                    "Intercept broadcasts",
+                    "Extract data"
+                ],
+                "requirements": [
+                    "Context access",
+                    "Filter knowledge",
+                    "Registration timing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test registration",
+                        "Check interception",
+                        "Verify extraction"
+                    ],
+                    "expected_results": [
+                        "Receiver registered",
+                        "Broadcasts intercepted",
+                        "Data extracted"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Context handler",
+                "Receiver manager",
+                "Filter handler"
+            ],
+            "tags": [
+                "broadcast",
+                "dynamic",
+                "registration",
+                "bypass"
+            ]
+        },
+        {
+            "id": "BCAST-005",
+            "name": "Protected Broadcast Exposure",
+            "description": "Application's protected broadcast handling can expose sensitive system information or operations.",
+            "severity": {
+                "level": "Critical",
+                "impact": "System information exposure and unauthorized operations",
+                "exploitability": "Hard"
+            },
+            "affects": {
+                "component": "android.content.Intent",
+                "actions": [
+                    "android.intent.action.AIRPLANE_MODE_CHANGED",
+                    "android.intent.action.BATTERY_LOW",
+                    "android.intent.action.TIMEZONE_CHANGED"
+                ],
+                "protection": "signature|system"
+            },
+            "detection": {
+                "pattern": [
+                    "<protected-broadcast[^>]+/>",
+                    "android\\.intent\\.action\\.[A-Z_]+",
+                    "sendBroadcast\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Protected broadcast",
+                    "Action handling",
+                    "Permission level"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Broadcast implementation",
+                        "Protection level",
+                        "Action validation"
+                    ],
+                    "exclusion_patterns": [
+                        "validateProtection",
+                        "checkLevel",
+                        "verifyBroadcast"
+                    ],
+                    "validation_steps": [
+                        "Check implementation",
+                        "Analyze protection",
+                        "Review actions",
+                        "Verify security"
+                    ],
+                    "context_requirements": [
+                        "Broadcast implementation",
+                        "Protection handling"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Hard",
+                "steps": [
+                    "Identify broadcast",
+                    "Analyze protection",
+                    "Bypass checks",
+                    "Access data",
+                    "Execute operations"
+                ],
+                "requirements": [
+                    "System access",
+                    "Protection knowledge",
+                    "Action patterns"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Test protection",
+                        "Check access",
+                        "Verify operations"
+                    ],
+                    "expected_results": [
+                        "Protection bypassed",
+                        "Data accessed",
+                        "Operations executed"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Intent handler",
+                "Protection system",
+                "Broadcast manager"
+            ],
+            "tags": [
+                "broadcast",
+                "protected",
+                "exposure",
+                "system"
+            ]
+        }
+    ]
+}

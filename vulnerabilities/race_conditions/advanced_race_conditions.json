@@ -1,0 +1,280 @@
+{
+    "metadata": {
+        "category": "Race Conditions",
+        "version": "1.0.0",
+        "last_updated": "2025-02-22T08:47:00Z",
+        "description": "Advanced race condition vulnerabilities in Android applications including database operations, content providers, and service interactions"
+    },
+    "vulnerabilities": [
+        {
+            "id": "RACE-003",
+            "name": "Database Transaction Race Condition",
+            "description": "Application performs database operations without proper transaction isolation, enabling race conditions and data corruption.",
+            "severity": {
+                "level": "High",
+                "impact": "Data corruption, inconsistent state, and transaction manipulation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "SQLiteDatabase\\.[^;]+",
+                    "(?<!begin)Transaction\\.[^;]+",
+                    "db\\.insert\\([^)]+\\)",
+                    "(?<!synchronized)\\s+update\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Database operations",
+                    "Transaction handling",
+                    "Data modification",
+                    "State management"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Database usage",
+                        "Transaction handling",
+                        "Concurrent access"
+                    ],
+                    "exclusion_patterns": [
+                        "beginTransaction",
+                        "synchronized",
+                        "lockDatabase"
+                    ],
+                    "validation_steps": [
+                        "Check transactions",
+                        "Analyze isolation",
+                        "Review locking",
+                        "Verify atomicity"
+                    ],
+                    "context_requirements": [
+                        "Database implementation",
+                        "Transaction management"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 90,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify transaction",
+                    "Create race window",
+                    "Trigger concurrent",
+                    "Manipulate data",
+                    "Corrupt state"
+                ],
+                "requirements": [
+                    "Database access",
+                    "Concurrent control",
+                    "Transaction timing"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Run concurrent",
+                        "Check state",
+                        "Verify corruption"
+                    ],
+                    "expected_results": [
+                        "Race triggered",
+                        "State corrupted",
+                        "Data inconsistent"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Database system",
+                "Transaction handler",
+                "Data storage"
+            ],
+            "tags": [
+                "race-condition",
+                "database",
+                "transaction",
+                "corruption"
+            ]
+        },
+        {
+            "id": "RACE-004",
+            "name": "Content Provider Race Condition",
+            "description": "Application accesses content providers without proper synchronization, enabling race conditions and unauthorized data access.",
+            "severity": {
+                "level": "High",
+                "impact": "Data exposure, unauthorized access, and state manipulation",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "ContentResolver\\.[^;]+",
+                    "query\\([^)]+\\)",
+                    "(?<!synchronized)\\s+insert\\([^)]+\\)",
+                    "getContentResolver\\(\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Provider access",
+                    "Data operations",
+                    "Query handling",
+                    "Content resolution"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Provider usage",
+                        "Data handling",
+                        "Concurrent access"
+                    ],
+                    "exclusion_patterns": [
+                        "synchronized",
+                        "lockProvider",
+                        "atomicAccess"
+                    ],
+                    "validation_steps": [
+                        "Check access",
+                        "Analyze sync",
+                        "Review locking",
+                        "Verify protection"
+                    ],
+                    "context_requirements": [
+                        "Provider implementation",
+                        "Access control"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 90,
+                    "dynamic_analysis": 85,
+                    "manual_review": 95
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify provider",
+                    "Create race window",
+                    "Access content",
+                    "Manipulate data",
+                    "Extract information"
+                ],
+                "requirements": [
+                    "Provider access",
+                    "Concurrent control",
+                    "Timing precision"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Access provider",
+                        "Race access",
+                        "Check data"
+                    ],
+                    "expected_results": [
+                        "Race triggered",
+                        "Data accessed",
+                        "State manipulated"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Content provider",
+                "Data handler",
+                "Access control"
+            ],
+            "tags": [
+                "race-condition",
+                "provider",
+                "content",
+                "access"
+            ]
+        },
+        {
+            "id": "RACE-005",
+            "name": "Service Start/Stop Race Condition",
+            "description": "Application handles service lifecycle without proper synchronization, enabling race conditions and service state manipulation.",
+            "severity": {
+                "level": "High",
+                "impact": "Service disruption, state manipulation, and component abuse",
+                "exploitability": "Medium"
+            },
+            "detection": {
+                "pattern": [
+                    "startService\\([^)]+\\)",
+                    "stopService\\([^)]+\\)",
+                    "(?<!synchronized)\\s+onStartCommand\\([^)]+\\)",
+                    "bindService\\([^)]+\\)"
+                ],
+                "method": "static",
+                "indicators": [
+                    "Service lifecycle",
+                    "State handling",
+                    "Start/stop operations",
+                    "Binding management"
+                ],
+                "accuracy_improvements": {
+                    "required_conditions": [
+                        "Service usage",
+                        "Lifecycle handling",
+                        "State management"
+                    ],
+                    "exclusion_patterns": [
+                        "synchronized",
+                        "lockService",
+                        "atomicState"
+                    ],
+                    "validation_steps": [
+                        "Check lifecycle",
+                        "Analyze state",
+                        "Review sync",
+                        "Verify handling"
+                    ],
+                    "context_requirements": [
+                        "Service implementation",
+                        "Lifecycle management"
+                    ]
+                },
+                "confidence_score": {
+                    "static_analysis": 85,
+                    "dynamic_analysis": 95,
+                    "manual_review": 90
+                }
+            },
+            "exploit": {
+                "difficulty": "Medium",
+                "steps": [
+                    "Identify service",
+                    "Create race window",
+                    "Manipulate state",
+                    "Trigger lifecycle",
+                    "Exploit condition"
+                ],
+                "requirements": [
+                    "Service access",
+                    "Lifecycle control",
+                    "State manipulation"
+                ],
+                "verification": {
+                    "test_cases": [
+                        "Start/stop race",
+                        "Check state",
+                        "Verify manipulation"
+                    ],
+                    "expected_results": [
+                        "Race triggered",
+                        "State corrupted",
+                        "Service affected"
+                    ]
+                }
+            },
+            "affected_components": [
+                "Service system",
+                "Lifecycle handler",
+                "State manager"
+            ],
+            "tags": [
+                "race-condition",
+                "service",
+                "lifecycle",
+                "state"
+            ]
+        }
+    ]
+}
